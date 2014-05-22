@@ -1,0 +1,29 @@
+optimizely.listing:
+  path: /admin/config/system/optimizely
+  defaults: 
+    _content: >
+      \Drupal\optimizely\Controller
+      \OptimizelyController::helloListing
+    _title: Optimizely
+  requirements:
+    _permission: administer optimizely
+
+optimizely.add_update:
+  path: /admin/config/system/optimizely/add_update
+  defaults: 
+    _content: >
+      \Drupal\optimizely\Controller
+      \OptimizelyController::helloAddProject
+    _title: Optimizely
+  requirements:
+    _permission: administer optimizely
+
+optimizely.acct_info:
+  path: /admin/config/system/optimizely/settings
+  defaults: 
+    _content: >
+      \Drupal\optimizely\Controller
+      \OptimizelyController::helloAcctInfo
+    _title: Optimizely
+  requirements:
+    _permission: administer optimizely
