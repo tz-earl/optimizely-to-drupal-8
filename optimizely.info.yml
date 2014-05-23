@@ -17,6 +17,6 @@ version: 0.1
 
 # The configure property specifies a route name, 
 # which is defined in the .routing.yml file.
-configure: optimizely.listing
+configure: optimizely.acct_info
 
 # files[] are no longer needed because of autoloading.
