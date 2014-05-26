@@ -51,7 +51,7 @@ function optimizely_help($path, $arg) {
         ' highlighted in green while disabled entries are in red. The top,' . 
         ' "Default" entry cannot be deleted but its settings can be adjusted or' . 
         ' completely disabled.</p>' .
-				'<p>The goal of having multiple projects is to minimize the size of the' . 
+        '<p>The goal of having multiple projects is to minimize the size of the' . 
         ' Optimizely hosted javascript file. If all experiments are contained in a' . 
         ' single file and processed on every page load there may be an issue with' . 
         ' increased page load time. Having multiple projects and loading them on' . 
