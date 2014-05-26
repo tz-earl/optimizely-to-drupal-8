@@ -1,15 +1,28 @@
 <?php
 
-namespace Drupal\optimizely;
+/**
+ * @file
+ * Contains \Drupal\optimizely\AccountInfoForm
+ */
 
+namespace Drupal\optimizely;
 use Drupal\Core\Form\FormBase;
 
+/**
+ * Implements the form for Account Info.
+ */
 class AccountInfoForm extends FormBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function getFormID() {
     return 'optimizely_account_info';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, array &$form_state) {
     $form['optimizely_id'] = array(
       '#type' => 'textfield',
@@ -27,17 +40,24 @@ class AccountInfoForm extends FormBase {
     $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => 'Submit',
+      '#button_type' => 'primary',
     );
-    // There is no parent::buildForm() method to call.
+
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function validateForm(array &$form, array &$form_state) {
     if (!preg_match('/^\d+$/', $form_state['values']['optimizely_id'])) {
       form_set_error('optimizely_id', $form_state, t('Your Optimizely ID should be numeric.'));
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, array &$form_state) {
     //************* Implement updates to database.
     // // Write the variable table
