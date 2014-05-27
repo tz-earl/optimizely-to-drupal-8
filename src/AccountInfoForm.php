@@ -50,7 +50,8 @@ class AccountInfoForm extends FormBase {
    */
   public function validateForm(array &$form, array &$form_state) {
     if (!preg_match('/^\d+$/', $form_state['values']['optimizely_id'])) {
-      form_set_error('optimizely_id', $form_state, t('Your Optimizely ID should be numeric.'));
+      \Drupal::formBuilder()->setErrorByName('optimizely_id', $form_state,
+                                              t('Your Optimizely ID should be numeric.'));
     }
   }
 
