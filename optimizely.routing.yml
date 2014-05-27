@@ -1,7 +1,7 @@
 optimizely.listing:
   path: /admin/config/system/optimizely
   defaults: 
-    _content: \Drupal\optimizely\Controller\OptimizelyController::helloListing
+    _form: \Drupal\optimizely\ProjectListForm
     _title: Optimizely
   requirements:
     _permission: administer optimizely
@@ -9,7 +9,7 @@ optimizely.listing:
 optimizely.add_update:
   path: /admin/config/system/optimizely/add_update
   defaults: 
-    _content: \Drupal\optimizely\Controller\OptimizelyController::helloAddProject
+    _form: \Drupal\optimizely\AddUpdateForm
     _title: Optimizely
   requirements:
     _permission: administer optimizely
