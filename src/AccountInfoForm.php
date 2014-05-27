@@ -40,7 +40,6 @@ class AccountInfoForm extends FormBase {
     $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => 'Submit',
-      '#button_type' => 'primary',
     );
 
     return $form;
