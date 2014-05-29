@@ -26,11 +26,11 @@ class AccountInfoForm extends FormBase {
   public function buildForm(array $form, array &$form_state) {
     $form['optimizely_id'] = array(
       '#type' => 'textfield',
-      '#title' => t('Optimizely ID Number'),
+      '#title' => $this->t('Optimizely ID Number'),
       // ********** Need to implement getting id from database.
       // '#default_value' => variable_get('optimizely_id', ''),
       '#description' => 
-        t('Your Optimizely account ID. This is the number after "/js/" in the' . 
+        $this->t('Your Optimizely account ID. This is the number after "/js/" in the' . 
           ' Optimizely Tracking Code found in your account on the Optimizely website.'),
       '#size' => 60,
       '#maxlength' => 256,
@@ -51,7 +51,7 @@ class AccountInfoForm extends FormBase {
   public function validateForm(array &$form, array &$form_state) {
     if (!preg_match('/^\d+$/', $form_state['values']['optimizely_id'])) {
       \Drupal::formBuilder()->setErrorByName('optimizely_id', $form_state,
-                                              t('Your Optimizely ID should be numeric.'));
+                                              $this->t('Your Optimizely ID should be numeric.'));
     }
   }
 

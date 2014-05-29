@@ -81,11 +81,11 @@ class AddUpdateForm extends FormBase {
     $form['optimizely_project_title'] = array(
       '#type' => 'textfield',
       '#disabled' => $target_oid == 1 ? TRUE : FALSE,
-      '#title' => t('Project Title'),
+      '#title' => $this->t('Project Title'),
       // '#default_value' => $target_oid ? check_plain($record->project_title) : '',
       '#description' => check_plain($target_oid) == 1 ? 
-        t('Default project, this field can not be changed.') : 
-        t('Descriptive name for the project entry.'),
+        $this->t('Default project, this field can not be changed.') : 
+        $this->t('Descriptive name for the project entry.'),
       '#size' => 60,
       '#maxlength' => 256,
       '#required' => TRUE,
@@ -95,7 +95,7 @@ class AddUpdateForm extends FormBase {
     $form['optimizely_project_code'] = array(
       '#type' => 'textfield',
       '#disabled' => $target_oid == 1 ? TRUE : FALSE,
-      '#title' => t('Optimizely Project Code'),
+      '#title' => $this->t('Optimizely Project Code'),
       '#default_value' => check_plain($project_code),
       // '#description' => ($account_code == 0) ?
       //   t('The Optimizely account value has not been set in the' . 
@@ -112,9 +112,9 @@ class AddUpdateForm extends FormBase {
 
     $form['optimizely_path'] = array(
       '#type' => 'textarea',
-      '#title' => t('Set Path Where Optimizely Code Snippet Appears'),
+      '#title' => $this->t('Set Path Where Optimizely Code Snippet Appears'),
       // '#default_value' => $target_oid ? implode("\n", unserialize($record->path)) : '',
-      '#description' => t('Enter the path where you want to insert the Optimizely' . 
+      '#description' => $this->t('Enter the path where you want to insert the Optimizely' . 
         ' Snippet. For Example: "/clubs/*" causes the snippet to appear on all pages' . 
         ' below "/clubs" in the URL but not on the actual "/clubs" page itself.'),
       '#cols' => 100,
@@ -126,7 +126,7 @@ class AddUpdateForm extends FormBase {
 
     $form['optimizely_enabled'] = array(
       '#type' => 'radios',
-      '#title' => t('Enable/Disable Project'),
+      '#title' => $this->t('Enable/Disable Project'),
       // '#default_value' => $target_oid ? $record->enabled : 0,
       '#options' => array(
         1 => 'Enable project',
