@@ -88,3 +88,32 @@ function optimizely_permission() {
     ),
   );
 }
+
+
+/**
+ * Implements hook_theme().
+ *
+ * All of the template definitions. All related templates can be found
+ * /template in the module folder. The template layout can be overridden
+ * by the site theme by copying these template files into theme directory.
+ *
+ * See http://www.jaypan.com/tutorial/themeing-drupal-7-forms-including-css-and-js
+ * for details on setting up theme function rather than tpl files.
+ */
+function optimizely_theme($existing, $type, $theme, $path) {
+  return array(
+    // 'optimizely_projects_table' => array(
+    //   'render element' => 'element',
+    // ),
+    'optimizely_account_settings_form' => array(
+      'render element' => 'form',
+      'template' => 'optimizely-account-settings-form',
+    ),
+    // 'optimizely_add_update_form' => array(
+    //   'render element' => 'form',
+    //   'template' => 'optimizely-add-update-form',
+    //   'path' => drupal_get_path('module', 'optimizely') . '/templates',
+    //   '#project_code' => 'project_code',
+    //  ),
+  );
+}
