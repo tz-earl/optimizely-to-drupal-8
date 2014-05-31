@@ -11,7 +11,7 @@ use Drupal\Core\Form\FormBase;
 /**
  * Implements the form for Account Info.
  */
-class AccountInfoForm extends FormBase {
+class AccountSettingsForm extends FormBase {
 
   /**
    * {@inheritdoc}
@@ -24,7 +24,7 @@ class AccountInfoForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $form['optimizely_id'] = array(
+    $settings_form['optimizely_id'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Optimizely ID Number'),
       // ********** Need to implement getting id from database.
@@ -36,13 +36,13 @@ class AccountInfoForm extends FormBase {
       '#maxlength' => 256,
       '#required' => TRUE,
     );
-    $form['actions'] = array('#type' => 'actions', );
-    $form['actions']['submit'] = array(
+    $settings_form['actions'] = array('#type' => 'actions', );
+    $settings_form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => 'Submit',
     );
 
-    return $form;
+    return $settings_form;  // Will be $form in the render array and the template file.
   }
 
   /**

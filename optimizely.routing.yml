@@ -17,7 +17,7 @@ optimizely.add_update:
 optimizely.acct_info:
   path: /admin/config/system/optimizely/settings
   defaults: 
-    _form: \Drupal\optimizely\AccountInfoForm
+    _form: \Drupal\optimizely\AccountSettingsForm
     _title: Optimizely
   requirements:
     _permission: administer optimizely
