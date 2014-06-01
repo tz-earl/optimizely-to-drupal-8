@@ -25,8 +25,8 @@ class AddUpdateForm extends FormBase {
    */
   public function buildForm(array $form, array &$form_state, $target_oid = NULL) {
   
-    $form = array();
-    $form['#attached'] = array(
+    $addupdate_form = array();
+    $addupdate_form['#attached'] = array(
         'css' => array(
         'type' => 'file',
         'data' => drupal_get_path('module', 'optimizely') . '/css/optimizely.css',
@@ -41,7 +41,7 @@ class AddUpdateForm extends FormBase {
 
       $intro_message = '';
 
-      $form['optimizely_oid'] = array(
+      $addupdate_form['optimizely_oid'] = array(
         '#type' => 'value',
         '#value' => NULL,
       );
@@ -62,12 +62,12 @@ class AddUpdateForm extends FormBase {
       // $record = $query->execute()
       //   ->fetchObject();
 
-      $form['optimizely_oid'] = array(
+      $addupdate_form['optimizely_oid'] = array(
         '#type' => 'value',
         '#value' => $target_oid,
       );
 
-      // $form['optimizely_original_path'] = array(
+      // $addupdate_form['optimizely_original_path'] = array(
       //   '#type' => 'value',
       //   '#value' => implode("\n", unserialize($record->path)),
       // );
@@ -78,7 +78,7 @@ class AddUpdateForm extends FormBase {
     }
 
     // If we are updating the default record, make the form element inaccessible
-    $form['optimizely_project_title'] = array(
+    $addupdate_form['optimizely_project_title'] = array(
       '#type' => 'textfield',
       '#disabled' => $target_oid == 1 ? TRUE : FALSE,
       '#title' => $this->t('Project Title'),
@@ -92,7 +92,7 @@ class AddUpdateForm extends FormBase {
       '#weight' => 10,
     );
 
-    $form['optimizely_project_code'] = array(
+    $addupdate_form['optimizely_project_code'] = array(
       '#type' => 'textfield',
       '#disabled' => $target_oid == 1 ? TRUE : FALSE,
       '#title' => $this->t('Optimizely Project Code'),
@@ -110,7 +110,7 @@ class AddUpdateForm extends FormBase {
       '#weight' => 20,
     );
 
-    $form['optimizely_path'] = array(
+    $addupdate_form['optimizely_path'] = array(
       '#type' => 'textarea',
       '#title' => $this->t('Set Path Where Optimizely Code Snippet Appears'),
       // '#default_value' => $target_oid ? implode("\n", unserialize($record->path)) : '',
@@ -124,7 +124,7 @@ class AddUpdateForm extends FormBase {
       '#weight' => 40,
     );
 
-    $form['optimizely_enabled'] = array(
+    $addupdate_form['optimizely_enabled'] = array(
       '#type' => 'radios',
       '#title' => $this->t('Enable/Disable Project'),
       // '#default_value' => $target_oid ? $record->enabled : 0,
@@ -138,18 +138,18 @@ class AddUpdateForm extends FormBase {
         array('class' => array('disabled')),
     );
 
-    $form['submit'] = array(
+    $addupdate_form['submit'] = array(
       '#type' => 'submit',
       '#value' => $form_action,
       '#weight' => 100,
     );
     
-    $form['cancel'] = array(
+    $addupdate_form['cancel'] = array(
       '#markup' => l(t('Cancel'), 'admin/config/system/optimizely'),
       '#weight' => 101,
     );
 
-    return $form;  
+    return $addupdate_form;  
   }
 
   /**
