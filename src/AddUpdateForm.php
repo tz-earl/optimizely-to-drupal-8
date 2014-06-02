@@ -26,6 +26,7 @@ class AddUpdateForm extends FormBase {
   public function buildForm(array $form, array &$form_state, $target_oid = NULL) {
   
     $addupdate_form = array();
+    $addupdate_form['#theme'] = 'optimizely_add_update_form';
     $addupdate_form['#attached'] = array(
         'css' => array(
         'type' => 'file',
@@ -154,12 +155,71 @@ class AddUpdateForm extends FormBase {
 
   /**
    * {@inheritdoc}
+   *
+   * Check to make sure the project code is unique except for the default
+   * entry which uses the account ID but should support an additional entry
+   * to allow for custom settings.
    */
   public function validateForm(array &$form, array &$form_state) {
-    // Check to make sure the project code is unique except for the default
-    // entry which uses the account ID but should support an additional entry
-    // to allow for custom settings. (Not implemented in D7 version.)
-  return;
+
+    // Watch for "Undefined" value in Project Code, Account ID needed in Settings page
+    if ($form_state['values']['optimizely_project_code'] == "Undefined") {
+      \Drupal::formBuilder()->setErrorByName('optimizely_project_code', $form_state,
+        $this->t('The Optimizely Account ID must be set in the' . 
+                  ' <a href="/admin/config/system/optimizely/settings">Account Info</a>' . 
+                  ' page. The account ID is used as the default Optimizely Project Code.'));
+    } // Validate that the project code entered is a number
+    elseif (!ctype_digit($form_state['values']['optimizely_project_code'])) {
+      \Drupal::formBuilder()->setErrorByName('optimizely_project_code', $form_state,
+        t('The project code !code must only contain digits.', 
+          array('!code' => $form_state['values']['optimizely_project_code'])));
+    }
+    elseif ($form_state['values']['op'] == 'Add') {
+      
+      // Confirm project_code is unique or the entered project code is also the account ID
+      // SELECT the project title in prep for related form error message
+      // $query = db_query('SELECT project_title FROM {optimizely} 
+      //   WHERE project_code = :project_code ORDER BY oid DESC', 
+      //   array(':project_code' => $form_state['values']['optimizely_project_code']));
+      // $query_count = $query->rowCount();
+     
+      // Flag submission if existing entry is found with the same project code value 
+      // AND it's not an SINGLE entry to replace the "default" entry.
+      // if ($query_count > 0 || 
+      //    ($form_state['values']['optimizely_project_code'] != variable_get('optimizely_id', FALSE) 
+      //       && $query_count >= 2)) {
+        
+      //   // Get the title of the project that already had the propject code
+      //   $found_entry_title = $query->fetchField();
+        
+        // // Flag the project code form field
+        // \Drupal::formBuilder()->setErrorByName('optimizely_project_code', $form_state,
+        //   t('The project code (!project_code) already has an entry in the "!found_entry_title" project.', 
+        //     array('!project_code' => $form_state['values']['optimizely_project_code'], 
+        //           '!found_entry_title' => $found_entry_title)));
+      // }
+      
+    }
+    
+    // Skip if disabled entry
+    if ($form_state['values']['optimizely_enabled']) {
+      
+      // Confirm that the project paths point to valid site URLs
+      $target_paths = preg_split('/[\r\n]+/', $form_state['values']['optimizely_path'], -1, PREG_SPLIT_NO_EMPTY);
+      // $valid_path = _optimizely_valid_paths($target_paths);
+    //   if (!is_bool($valid_path)) {
+    //     form_set_error('optimizely_path', t('The project path "!project_path" is not a valid path. The path or alias could not be resolved as a valid URL that will result in content on the site.', array('!project_path' => $valid_path)));
+    //   }
+      
+    //   // There must be only one Optimizely javascript call on a page. Check paths to ensure there are no duplicates  
+    //   // http://support.optimizely.com/customer/portal/questions/893051-multiple-code-snippets-on-same-page-ok-
+    //   list($error_title, $error_path) = _optimizely_unique_paths($target_paths, $form_state['values']['optimizely_oid']);
+    
+    //   if (!is_bool($error_title)) {
+    //     form_set_error('optimizely_path', t('The path "!error_path" will result in a duplicate entry based on the other project path settings. Optimizely does not allow more than one project to be run on a page.', array('!error_path' => $error_path)));
+    //   }   
+    }
+
   }
 
 
@@ -167,6 +227,62 @@ class AddUpdateForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    return;
+
+    // Catch form submitted values and prep for processing
+    $oid = $form_state['values']['optimizely_oid'];
+
+    $project_title = check_plain($form_state['values']['optimizely_project_title']);
+    $project_code = check_plain($form_state['values']['optimizely_project_code']);
+
+    // @totdo - Add support for "<front>" to allow use of check_plain() on ['optimizely_path']
+    $path_array = preg_split('/[\r\n]+/', $form_state['values']['optimizely_path'], 
+                              -1, PREG_SPLIT_NO_EMPTY);
+
+    $enabled = check_plain($form_state['values']['optimizely_enabled']);
+
+    // Process add or edit submission
+    // No ID value included in submission - add new entry
+    // if (!isset($oid))  {
+
+    //   db_insert('optimizely')
+    //     ->fields(array(
+    //       'project_title' => $project_title,
+    //       'path' => serialize($path_array),
+    //       'project_code' => $project_code,
+    //       'enabled' => $enabled,
+    //     ))
+    //     ->execute();
+
+    //   drupal_set_message(t('The project entry has been created.'), 'status');
+
+    //   // Rebuild the provided paths to ensure Optimizely javascript is now included on paths
+    //   if ($enabled) {
+    //     optimizely_refresh_cache($path_array);
+    //   }
+
+    // } // $oid is set, update exsisting entry
+    // else {
+
+    //   db_update('optimizely')
+    //     ->fields(array(
+    //       'project_title' => $project_title,
+    //       'path' => serialize($path_array),
+    //       'project_code' => $project_code,
+    //       'enabled' => $enabled,
+    //     ))
+    //     ->condition('oid', $oid)
+    //     ->execute();
+
+    //   drupal_set_message(t('The project entry has been updated.'), 'status');
+
+    //   // Path originally set for project - to be compaired to the updated value to determine what cache paths needs to be refreshed
+    //   $original_path_array = preg_split('/[\r\n]+/', $form_state['values']['optimizely_original_path'], -1, PREG_SPLIT_NO_EMPTY);
+
+    //   optimizely_refresh_cache($path_array, $original_path_array);
+
+    // }
+
+    // Return to project listing page
+    $form_state['redirect_route']['route_name'] = 'optimizely.listing';
   }
 }

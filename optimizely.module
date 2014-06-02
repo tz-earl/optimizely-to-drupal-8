@@ -109,11 +109,9 @@ function optimizely_theme($existing, $type, $theme, $path) {
       'render element' => 'form',
       'template' => 'optimizely-account-settings-form',
     ),
-    // 'optimizely_add_update_form' => array(
-    //   'render element' => 'form',
-    //   'template' => 'optimizely-add-update-form',
-    //   'path' => drupal_get_path('module', 'optimizely') . '/templates',
-    //   '#project_code' => 'project_code',
-    //  ),
+    'optimizely_add_update_form' => array(
+      'render element' => 'form',
+      'template' => 'optimizely-add-update-form',
+     ),
   );
 }
