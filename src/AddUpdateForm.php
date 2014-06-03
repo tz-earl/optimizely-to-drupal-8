@@ -171,26 +171,28 @@ class AddUpdateForm extends FormBase {
     } // Validate that the project code entered is a number
     elseif (!ctype_digit($form_state['values']['optimizely_project_code'])) {
       \Drupal::formBuilder()->setErrorByName('optimizely_project_code', $form_state,
-        t('The project code !code must only contain digits.', 
+        $this->t('The project code !code must only contain digits.', 
           array('!code' => $form_state['values']['optimizely_project_code'])));
     }
     elseif ($form_state['values']['op'] == 'Add') {
       
-      // Confirm project_code is unique or the entered project code is also the account ID
-      // SELECT the project title in prep for related form error message
+      // Confirm project_code is unique or the entered project code is also the account ID.
+      // SELECT the project title in prep for related form error message.
+
       // $query = db_query('SELECT project_title FROM {optimizely} 
       //   WHERE project_code = :project_code ORDER BY oid DESC', 
       //   array(':project_code' => $form_state['values']['optimizely_project_code']));
       // $query_count = $query->rowCount();
      
       // Flag submission if existing entry is found with the same project code value 
-      // AND it's not an SINGLE entry to replace the "default" entry.
+      // AND it's not a SINGLE entry to replace the "default" entry.
+
       // if ($query_count > 0 || 
       //    ($form_state['values']['optimizely_project_code'] != variable_get('optimizely_id', FALSE) 
       //       && $query_count >= 2)) {
         
-      //   // Get the title of the project that already had the propject code
-      //   $found_entry_title = $query->fetchField();
+        // // Get the title of the project that already had the project code
+        // $found_entry_title = $query->fetchField();
         
         // // Flag the project code form field
         // \Drupal::formBuilder()->setErrorByName('optimizely_project_code', $form_state,
@@ -242,7 +244,7 @@ class AddUpdateForm extends FormBase {
 
     // Process add or edit submission
     // No ID value included in submission - add new entry
-    // if (!isset($oid))  {
+    if (!isset($oid))  {
 
     //   db_insert('optimizely')
     //     ->fields(array(
@@ -253,15 +255,15 @@ class AddUpdateForm extends FormBase {
     //     ))
     //     ->execute();
 
-    //   drupal_set_message(t('The project entry has been created.'), 'status');
+      drupal_set_message(t('The project entry has been created.'), 'status');
 
     //   // Rebuild the provided paths to ensure Optimizely javascript is now included on paths
     //   if ($enabled) {
     //     optimizely_refresh_cache($path_array);
     //   }
 
-    // } // $oid is set, update exsisting entry
-    // else {
+    } // $oid is set, update exsisting entry
+    else {
 
     //   db_update('optimizely')
     //     ->fields(array(
@@ -273,14 +275,15 @@ class AddUpdateForm extends FormBase {
     //     ->condition('oid', $oid)
     //     ->execute();
 
-    //   drupal_set_message(t('The project entry has been updated.'), 'status');
+      drupal_set_message(t('The project entry has been updated.'), 'status');
 
-    //   // Path originally set for project - to be compaired to the updated value to determine what cache paths needs to be refreshed
+      // Path originally set for project - to be compared to the updated value
+      // to determine what cache paths needs to be refreshed
     //   $original_path_array = preg_split('/[\r\n]+/', $form_state['values']['optimizely_original_path'], -1, PREG_SPLIT_NO_EMPTY);
 
     //   optimizely_refresh_cache($path_array, $original_path_array);
 
-    // }
+    }
 
     // Return to project listing page
     $form_state['redirect_route']['route_name'] = 'optimizely.listing';
