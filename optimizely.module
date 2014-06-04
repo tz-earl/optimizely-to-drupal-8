@@ -102,9 +102,6 @@ function optimizely_permission() {
  */
 function optimizely_theme($existing, $type, $theme, $path) {
   return array(
-    // 'optimizely_projects_table' => array(
-    //   'render element' => 'element',
-    // ),
     'optimizely_account_settings_form' => array(
       'render element' => 'form',
       'template' => 'optimizely-account-settings-form',
