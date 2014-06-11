@@ -34,6 +34,7 @@ class AddUpdateForm extends FormBase {
       ),
     );
 
+    //*********************** $account_id not used?
     // $account_id = variable_get('optimizely_id', 0);
 
     if ($target_oid == NULL) {
@@ -50,6 +51,7 @@ class AddUpdateForm extends FormBase {
       // Enable form element defaults - blank, unselected
       $enabled = FALSE;
       $project_code = '';
+      //************************
       // $account_code = variable_get('optimizely_id', 0);
 
     }
@@ -57,24 +59,26 @@ class AddUpdateForm extends FormBase {
 
       $form_action = 'Update';
 
-      // $query = db_select('optimizely', 'o', array('target' => 'slave'))
-      //   ->fields('o')
-      //   ->condition('o.oid', $target_oid, '=');
-      // $record = $query->execute()
-      //   ->fetchObject();
+      $query = db_select('optimizely', 'o', array('target' => 'slave'))
+        ->fields('o')
+        ->condition('o.oid', $target_oid, '=');
+
+      $record = $query->execute()
+        ->fetchObject();
 
       $addupdate_form['optimizely_oid'] = array(
         '#type' => 'value',
         '#value' => $target_oid,
       );
 
-      // $addupdate_form['optimizely_original_path'] = array(
-      //   '#type' => 'value',
-      //   '#value' => implode("\n", unserialize($record->path)),
-      // );
+      $addupdate_form['optimizely_original_path'] = array(
+        '#type' => 'value',
+        '#value' => implode("\n", unserialize($record->path)),
+      );
 
-      // $enabled = $record->enabled;
-      // $record->project_code == 0 ? $project_code = 'Undefined' : $project_code = $record->project_code;
+      $enabled = $record->enabled;
+      $project_code = ($record->project_code == 0) ? 'Undefined' : $record->project_code;
+      //********************
       // $account_code = variable_get('optimizely_id', 0);
     }
 
@@ -83,7 +87,7 @@ class AddUpdateForm extends FormBase {
       '#type' => 'textfield',
       '#disabled' => $target_oid == 1 ? TRUE : FALSE,
       '#title' => $this->t('Project Title'),
-      // '#default_value' => $target_oid ? check_plain($record->project_title) : '',
+      '#default_value' => $target_oid ? check_plain($record->project_title) : '',
       '#description' => check_plain($target_oid) == 1 ? 
         $this->t('Default project, this field can not be changed.') : 
         $this->t('Descriptive name for the project entry.'),
@@ -98,13 +102,13 @@ class AddUpdateForm extends FormBase {
       '#disabled' => $target_oid == 1 ? TRUE : FALSE,
       '#title' => $this->t('Optimizely Project Code'),
       '#default_value' => check_plain($project_code),
-      // '#description' => ($account_code == 0) ?
-      //   t('The Optimizely account value has not been set in the' . 
-      //     ' <a href="/admin/config/system/optimizely/settings">' . 
-      //     'Account Info</a> settings form. The Optimizely account value is used as' . 
-      //     ' the project ID for this "default" project entry.') :
-      //   t('The Optimizely javascript file name used in the snippet as provided by' . 
-      //     ' the Optimizely website for the project.'),
+      '#description' => ($account_code == 0) ?
+        $this->t('The Optimizely account value has not been set in the' . 
+          ' <a href="/admin/config/system/optimizely/settings">' . 
+          'Account Info</a> settings form. The Optimizely account value is used as' . 
+          ' the project ID for this "default" project entry.') :
+        $this->t('The Optimizely javascript file name used in the snippet' . 
+          ' as provided by the Optimizely website for the project.'),
       '#size' => 30,
       '#maxlength' => 100,
       '#required' => TRUE,
@@ -114,7 +118,7 @@ class AddUpdateForm extends FormBase {
     $addupdate_form['optimizely_path'] = array(
       '#type' => 'textarea',
       '#title' => $this->t('Set Path Where Optimizely Code Snippet Appears'),
-      // '#default_value' => $target_oid ? implode("\n", unserialize($record->path)) : '',
+      '#default_value' => $target_oid ? implode("\n", unserialize($record->path)) : '',
       '#description' => $this->t('Enter the path where you want to insert the Optimizely' . 
         ' Snippet. For Example: "/clubs/*" causes the snippet to appear on all pages' . 
         ' below "/clubs" in the URL but not on the actual "/clubs" page itself.'),
@@ -128,7 +132,7 @@ class AddUpdateForm extends FormBase {
     $addupdate_form['optimizely_enabled'] = array(
       '#type' => 'radios',
       '#title' => $this->t('Enable/Disable Project'),
-      // '#default_value' => $target_oid ? $record->enabled : 0,
+      '#default_value' => $target_oid ? $record->enabled : 0,
       '#options' => array(
         1 => 'Enable project',
         0 => 'Disable project',
@@ -179,26 +183,31 @@ class AddUpdateForm extends FormBase {
       // Confirm project_code is unique or the entered project code is also the account ID.
       // SELECT the project title in prep for related form error message.
 
-      // $query = db_query('SELECT project_title FROM {optimizely} 
-      //   WHERE project_code = :project_code ORDER BY oid DESC', 
-      //   array(':project_code' => $form_state['values']['optimizely_project_code']));
-      // $query_count = $query->rowCount();
-     
+      $query = db_query('SELECT project_title FROM {optimizely} 
+        WHERE project_code = :project_code ORDER BY oid DESC', 
+        array(':project_code' => $form_state['values']['optimizely_project_code']));
+
+      // Fetch an indexed array of the project titles, if any.
+      $results = $query->fetchCol(0);
+      $query_count = count($results);
+
       // Flag submission if existing entry is found with the same project code value 
       // AND it's not a SINGLE entry to replace the "default" entry.
 
+      //*********************** Confusing condition for the if statement.
       // if ($query_count > 0 || 
       //    ($form_state['values']['optimizely_project_code'] != variable_get('optimizely_id', FALSE) 
       //       && $query_count >= 2)) {
         
-        // // Get the title of the project that already had the project code
-        // $found_entry_title = $query->fetchField();
+        // Get the title of the project that already had the project code
+        // $found_entry_title = $results[0];
         
-        // // Flag the project code form field
-        // \Drupal::formBuilder()->setErrorByName('optimizely_project_code', $form_state,
-        //   t('The project code (!project_code) already has an entry in the "!found_entry_title" project.', 
-        //     array('!project_code' => $form_state['values']['optimizely_project_code'], 
-        //           '!found_entry_title' => $found_entry_title)));
+        // Flag the project code form field
+      //   \Drupal::formBuilder()->setErrorByName('optimizely_project_code', $form_state,
+      //     $this->t('The project code (!project_code) already has an entry' . 
+      //               ' in the "!found_entry_title" project.', 
+      //               array('!project_code' => $form_state['values']['optimizely_project_code'], 
+      //                     '!found_entry_title' => $found_entry_title)));
       // }
       
     }
@@ -213,8 +222,10 @@ class AddUpdateForm extends FormBase {
     //     form_set_error('optimizely_path', t('The project path "!project_path" is not a valid path. The path or alias could not be resolved as a valid URL that will result in content on the site.', array('!project_path' => $valid_path)));
     //   }
       
-    //   // There must be only one Optimizely javascript call on a page. Check paths to ensure there are no duplicates  
-    //   // http://support.optimizely.com/customer/portal/questions/893051-multiple-code-snippets-on-same-page-ok-
+      // There must be only one Optimizely javascript call on a page. 
+      // Check paths to ensure there are no duplicates  
+      // http://support.optimizely.com/customer/portal/questions/893051-multiple-code-snippets-on-same-page-ok-
+
     //   list($error_title, $error_path) = _optimizely_unique_paths($target_paths, $form_state['values']['optimizely_oid']);
     
     //   if (!is_bool($error_title)) {
@@ -246,14 +257,14 @@ class AddUpdateForm extends FormBase {
     // No ID value included in submission - add new entry
     if (!isset($oid))  {
 
-    //   db_insert('optimizely')
-    //     ->fields(array(
-    //       'project_title' => $project_title,
-    //       'path' => serialize($path_array),
-    //       'project_code' => $project_code,
-    //       'enabled' => $enabled,
-    //     ))
-    //     ->execute();
+      db_insert('optimizely')
+        ->fields(array(
+          'project_title' => $project_title,
+          'path' => serialize($path_array),
+          'project_code' => $project_code,
+          'enabled' => $enabled,
+        ))
+        ->execute();
 
       drupal_set_message(t('The project entry has been created.'), 'status');
 
@@ -262,18 +273,18 @@ class AddUpdateForm extends FormBase {
     //     optimizely_refresh_cache($path_array);
     //   }
 
-    } // $oid is set, update exsisting entry
+    } // $oid is set, update existing entry
     else {
 
-    //   db_update('optimizely')
-    //     ->fields(array(
-    //       'project_title' => $project_title,
-    //       'path' => serialize($path_array),
-    //       'project_code' => $project_code,
-    //       'enabled' => $enabled,
-    //     ))
-    //     ->condition('oid', $oid)
-    //     ->execute();
+      db_update('optimizely')
+        ->fields(array(
+          'project_title' => $project_title,
+          'path' => serialize($path_array),
+          'project_code' => $project_code,
+          'enabled' => $enabled,
+        ))
+        ->condition('oid', $oid)
+        ->execute();
 
       drupal_set_message(t('The project entry has been updated.'), 'status');
 

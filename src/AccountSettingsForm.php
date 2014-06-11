@@ -70,13 +70,13 @@ class AccountSettingsForm extends FormBase {
     // // Write the variable table
     // variable_set('optimizely_id', $form_state['values']['optimizely_id']);
 
-    // // Update the default project / experiement entry with the account ID value
-    // db_update('optimizely')
-    //   ->fields(array(
-    //       'project_code' => $form_state['values']['optimizely_id'],
-    //     ))
-    //   ->condition('oid', '1')
-    //   ->execute();
+    // Update the default project / experiment entry with the account ID value
+    db_update('optimizely')
+      ->fields(array(
+          'project_code' => $form_state['values']['optimizely_id'],
+        ))
+      ->condition('oid', '1')
+      ->execute();
 
     // Inform the administrator that the default project / experiment entry
     // is ready to be enabled.
