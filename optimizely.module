@@ -93,12 +93,9 @@ function optimizely_permission() {
 /**
  * Implements hook_theme().
  *
- * All of the template definitions. All related templates can be found
+ * All of the template definitions. All related templates can be found in
  * /template in the module folder. The template layout can be overridden
  * by the site theme by copying these template files into theme directory.
- *
- * See http://www.jaypan.com/tutorial/themeing-drupal-7-forms-including-css-and-js
- * for details on setting up theme function rather than tpl files.
  */
 function optimizely_theme($existing, $type, $theme, $path) {
   return array(
