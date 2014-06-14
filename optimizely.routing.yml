@@ -14,6 +14,14 @@ optimizely.add_update:
   requirements:
     _permission: administer optimizely
 
+optimizely.add_update.oid:
+  path: /admin/config/system/optimizely/add_update/{oid}
+  defaults:
+    _content: \Drupal\optimizely\DoUpdate::buildUpdateForm
+    _title: Optimizely Edit Project
+  requirements:
+    _permission: administer optimizely
+
 optimizely.settings:
   path: /admin/config/system/optimizely/settings
   defaults: 

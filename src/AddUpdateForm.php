@@ -13,6 +13,13 @@ use Drupal\Core\Form\FormBase;
  */
 class AddUpdateForm extends FormBase {
 
+  // A positive integer which is a unique Optimizely project id.
+  private $oid = NULL;
+
+  public function __construct($oid = NULL) {
+    $this->oid = $oid;
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -23,8 +30,9 @@ class AddUpdateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $target_oid = NULL) {
-  
+  public function buildForm(array $form, array &$form_state) {
+    $target_oid = $this->oid;
+
     $addupdate_form = array();
     $addupdate_form['#theme'] = 'optimizely_add_update_form';
     $addupdate_form['#attached'] = array(
@@ -77,7 +85,7 @@ class AddUpdateForm extends FormBase {
       );
 
       $enabled = $record->enabled;
-      $project_code = ($record->project_code == 0) ? 'Undefined' : $record->project_code;
+      $project_code = ($record->project_code == 0) ? 'Undefined' : $record->project_code; 
       //********************
       // $account_code = variable_get('optimizely_id', 0);
     }

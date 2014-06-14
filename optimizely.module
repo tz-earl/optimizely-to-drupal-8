@@ -28,6 +28,13 @@
  */
 function optimizely_help($path, $arg) {
 
+  // Look for paths for updating particular projects and
+  // fix them to match in the switch statement below.
+  // The replacement string includes % as a kind of wildcard.
+  $pattern = ':^admin/config/system/optimizely/add_update/\d+$:';
+  $replacement = 'admin/config/system/optimizely/add_update/%';
+  $path = preg_replace($pattern, $replacement, $path);
+
   switch ($path) {
 
     case 'admin/help#optimizely':
@@ -60,6 +67,7 @@ function optimizely_help($path, $arg) {
         ' browser.</p>');
 
     case 'admin/config/system/optimizely/add_update':
+    case 'admin/config/system/optimizely/add_update/%':
       return t('Add or edit specific project entries. Each entry should have an' . 
         ' Optimizely project / experiment assigned to it, as well as a range of' . 
         ' website paths where the Optimizely javascript hosted file should be' . 
