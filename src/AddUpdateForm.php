@@ -13,13 +13,6 @@ use Drupal\Core\Form\FormBase;
  */
 class AddUpdateForm extends FormBase {
 
-  // A positive integer which is a unique Optimizely project id.
-  private $oid = NULL;
-
-  public function __construct($oid = NULL) {
-    $this->oid = $oid;
-  }
-
   /**
    * {@inheritdoc}
    */
@@ -30,8 +23,7 @@ class AddUpdateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
-    $target_oid = $this->oid;
+  public function buildForm(array $form, array &$form_state, $target_oid = NULL) {
 
     $addupdate_form = array();
     $addupdate_form['#theme'] = 'optimizely_add_update_form';
