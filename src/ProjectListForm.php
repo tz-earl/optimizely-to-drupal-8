@@ -55,8 +55,7 @@ class ProjectListForm extends FormBase {
     $rows_rend = array();
 
     // Lookup account ID setting to trigger "nag message".
-    //************** Replace use of variable_get()
-    // $account_id = variable_get('optimizely_id', 0);
+    $account_id =  AccountId::getId();
     
     // Begin building the query.
     $query = db_select('optimizely', 'o', array('target' => 'slave'))
@@ -74,8 +73,14 @@ class ProjectListForm extends FormBase {
       foreach ($paths as $path) {
         // Deal with "<front>" as one of the paths
         if ($path == '<front>') {
-          $front_path = variable_get('site_frontpage');
-          $front_path .= ' <-> ' . drupal_lookup_path('alias', $front_path);
+          $config = \Drupal::config('system.site');
+          $front_path = $config->get('page.front');
+
+          // D7, was: $front_path .= ' <-> ' . drupal_lookup_path('alias', $front_path);
+          // Not sure this is correct replacement for drupal_lookup_path().
+          $path_alias = 
+            \Drupal::service('path.alias_manager.cached')->getPathAlias($front_path);
+          $front_path .= ' <-> ' . $path_alias;
           $path = htmlspecialchars('<front>') . ' (' . $front_path . ')';
         }
         $project_paths .= '<li>' . $path . '</li>';

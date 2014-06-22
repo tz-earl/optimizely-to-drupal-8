@@ -31,11 +31,11 @@ class AccountSettingsForm extends FormBase {
         'data' => drupal_get_path('module', 'optimizely') . '/css/optimizely.css',
       ),
     );
+
     $settings_form['optimizely_id'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Optimizely ID Number'),
-      // ********** Need to implement getting id from database.
-      // '#default_value' => variable_get('optimizely_id', ''),
+      '#default_value' => AccountId::getId(),
       '#description' => 
         $this->t('Your Optimizely account ID. This is the number after "/js/" in the' . 
           ' Optimizely Tracking Code found in your account on the Optimizely website.'),
@@ -66,14 +66,15 @@ class AccountSettingsForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    //************* Implement updates to database.
-    // // Write the variable table
-    // variable_set('optimizely_id', $form_state['values']['optimizely_id']);
+
+    // Store the optimizely account id number.
+    $optimizely_id = $form_state['values']['optimizely_id'];
+    AccountId::setId($optimizely_id);
 
     // Update the default project / experiment entry with the account ID value
     db_update('optimizely')
       ->fields(array(
-          'project_code' => $form_state['values']['optimizely_id'],
+          'project_code' => $optimizely_id,
         ))
       ->condition('oid', '1')
       ->execute();

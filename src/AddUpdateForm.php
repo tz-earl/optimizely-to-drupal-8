@@ -6,7 +6,11 @@
  */
 
 namespace Drupal\optimizely;
+
 use Drupal\Core\Form\FormBase;
+use Drupal\Component\Utility\String;
+
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Implements the form for the Add Projects page.
@@ -34,9 +38,6 @@ class AddUpdateForm extends FormBase {
       ),
     );
 
-    //*********************** $account_id not used?
-    // $account_id = variable_get('optimizely_id', 0);
-
     if ($target_oid == NULL) {
 
       $form_action = 'Add';
@@ -51,9 +52,6 @@ class AddUpdateForm extends FormBase {
       // Enable form element defaults - blank, unselected
       $enabled = FALSE;
       $project_code = '';
-      //************************
-      // $account_code = variable_get('optimizely_id', 0);
-
     }
     else {
 
@@ -78,8 +76,6 @@ class AddUpdateForm extends FormBase {
 
       $enabled = $record->enabled;
       $project_code = ($record->project_code == 0) ? 'Undefined' : $record->project_code; 
-      //********************
-      // $account_code = variable_get('optimizely_id', 0);
     }
 
     // If we are updating the default record, make the form element inaccessible
@@ -87,8 +83,8 @@ class AddUpdateForm extends FormBase {
       '#type' => 'textfield',
       '#disabled' => $target_oid == 1 ? TRUE : FALSE,
       '#title' => $this->t('Project Title'),
-      '#default_value' => $target_oid ? check_plain($record->project_title) : '',
-      '#description' => check_plain($target_oid) == 1 ? 
+      '#default_value' => $target_oid ? String::checkPlain($record->project_title) : '',
+      '#description' => String::checkPlain($target_oid) == 1 ? 
         $this->t('Default project, this field can not be changed.') : 
         $this->t('Descriptive name for the project entry.'),
       '#size' => 60,
@@ -97,12 +93,14 @@ class AddUpdateForm extends FormBase {
       '#weight' => 10,
     );
 
+    $account_id = AccountId::getId();
+
     $addupdate_form['optimizely_project_code'] = array(
       '#type' => 'textfield',
       '#disabled' => $target_oid == 1 ? TRUE : FALSE,
       '#title' => $this->t('Optimizely Project Code'),
-      '#default_value' => check_plain($project_code),
-      '#description' => ($account_code == 0) ?
+      '#default_value' => String::checkPlain($project_code),
+      '#description' => ($account_id == 0) ?
         $this->t('The Optimizely account value has not been set in the' . 
           ' <a href="/admin/config/system/optimizely/settings">' . 
           'Account Info</a> settings form. The Optimizely account value is used as' . 
@@ -194,21 +192,20 @@ class AddUpdateForm extends FormBase {
       // Flag submission if existing entry is found with the same project code value 
       // AND it's not a SINGLE entry to replace the "default" entry.
 
-      //*********************** Confusing condition for the if statement.
-      // if ($query_count > 0 || 
-      //    ($form_state['values']['optimizely_project_code'] != variable_get('optimizely_id', FALSE) 
-      //       && $query_count >= 2)) {
+      if ($query_count > 0 || 
+         ($form_state['values']['optimizely_project_code'] != AccountId::getId() 
+            && $query_count >= 2)) {
         
         // Get the title of the project that already had the project code
-        // $found_entry_title = $results[0];
+        $found_entry_title = $results[0];
         
         // Flag the project code form field
-      //   \Drupal::formBuilder()->setErrorByName('optimizely_project_code', $form_state,
-      //     $this->t('The project code (!project_code) already has an entry' . 
-      //               ' in the "!found_entry_title" project.', 
-      //               array('!project_code' => $form_state['values']['optimizely_project_code'], 
-      //                     '!found_entry_title' => $found_entry_title)));
-      // }
+        \Drupal::formBuilder()->setErrorByName('optimizely_project_code', $form_state,
+          $this->t('The project code (!project_code) already has an entry' . 
+                    ' in the "!found_entry_title" project.', 
+                    array('!project_code' => $form_state['values']['optimizely_project_code'], 
+                          '!found_entry_title' => $found_entry_title)));
+      }
       
     }
     
@@ -244,14 +241,14 @@ class AddUpdateForm extends FormBase {
     // Catch form submitted values and prep for processing
     $oid = $form_state['values']['optimizely_oid'];
 
-    $project_title = check_plain($form_state['values']['optimizely_project_title']);
-    $project_code = check_plain($form_state['values']['optimizely_project_code']);
+    $project_title = String::checkPlain($form_state['values']['optimizely_project_title']);
+    $project_code = String::checkPlain($form_state['values']['optimizely_project_code']);
 
-    // @totdo - Add support for "<front>" to allow use of check_plain() on ['optimizely_path']
+    // @todo - Add support for "<front>" to allow use of String::checkPlain() on ['optimizely_path']
     $path_array = preg_split('/[\r\n]+/', $form_state['values']['optimizely_path'], 
                               -1, PREG_SPLIT_NO_EMPTY);
 
-    $enabled = check_plain($form_state['values']['optimizely_enabled']);
+    $enabled = String::checkPlain($form_state['values']['optimizely_enabled']);
 
     // Process add or edit submission
     // No ID value included in submission - add new entry

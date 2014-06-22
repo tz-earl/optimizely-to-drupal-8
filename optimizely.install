@@ -154,11 +154,8 @@ function optimizely_install() {
  */
 function optimizely_uninstall() {
 
-  // Remove all optimizely settings in the variable table
-  //******************** fix this.
-  // $cleanup_status = (bool) db_delete('variable')
-  //   ->condition('name', '%optimizely_%', 'LIKE')
-  //   ->execute();
+  // Remove all optimizely settings.
+  $cleanup_status = Drupal\optimizely\AccountId::deleteId();
 
   if ($cleanup_status == TRUE) {
     drupal_set_message(t('Optimizely variables deleted.'), 'status');
