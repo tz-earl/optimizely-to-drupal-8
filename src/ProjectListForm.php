@@ -76,10 +76,10 @@ class ProjectListForm extends FormBase {
           $config = \Drupal::config('system.site');
           $front_path = $config->get('page.front');
 
-          // D7, was: $front_path .= ' <-> ' . drupal_lookup_path('alias', $front_path);
-          // Not sure this is correct replacement for drupal_lookup_path().
-          $path_alias = 
-            \Drupal::service('path.alias_manager.cached')->getPathAlias($front_path);
+          $path_alias = \Drupal::service('path.alias_manager')->getPathAlias($front_path);
+          if (strcmp($path_alias, $front_path) == 0) {  // No alias was found.
+            $path_alias = '';
+          }
           $front_path .= ' <-> ' . $path_alias;
           $path = htmlspecialchars('<front>') . ' (' . $front_path . ')';
         }
