@@ -214,10 +214,13 @@ class AddUpdateForm extends FormBase {
       
       // Confirm that the project paths point to valid site URLs
       $target_paths = preg_split('/[\r\n]+/', $form_state['values']['optimizely_path'], -1, PREG_SPLIT_NO_EMPTY);
-      // $valid_path = _optimizely_valid_paths($target_paths);
-    //   if (!is_bool($valid_path)) {
-    //     form_set_error('optimizely_path', t('The project path "!project_path" is not a valid path. The path or alias could not be resolved as a valid URL that will result in content on the site.', array('!project_path' => $valid_path)));
-    //   }
+      $valid_path = $this->validatePaths($target_paths);
+      if (!is_bool($valid_path)) {
+        \Drupal::formBuilder()->setErrorByName('optimizely_path', $form_state,
+          t('The project path "!project_path" is not a valid path. The path or alias' . 
+            ' could not be resolved as a valid URL that will result in content on the site.', 
+            array('!project_path' => $valid_path)));
+      }
       
       // There must be only one Optimizely javascript call on a page. 
       // Check paths to ensure there are no duplicates  
@@ -225,9 +228,13 @@ class AddUpdateForm extends FormBase {
 
     //   list($error_title, $error_path) = _optimizely_unique_paths($target_paths, $form_state['values']['optimizely_oid']);
     
-    //   if (!is_bool($error_title)) {
-    //     form_set_error('optimizely_path', t('The path "!error_path" will result in a duplicate entry based on the other project path settings. Optimizely does not allow more than one project to be run on a page.', array('!error_path' => $error_path)));
-    //   }   
+      if (!is_bool($error_title)) {
+        \Drupal::formBuilder()->setErrorByName('optimizely_path', $form_state,
+          t('The path "!error_path" will result in a duplicate entry based on' . 
+            ' the other project path settings. Optimizely does not allow more' . 
+            ' than one project to be run on a page.', 
+            array('!error_path' => $error_path)));
+      }   
     }
 
   }
@@ -296,4 +303,107 @@ class AddUpdateForm extends FormBase {
     // Return to project listing page
     $form_state['redirect_route']['route_name'] = 'optimizely.listing';
   }
+
+  /**
+   * validatePaths()
+   * 
+   * Validate the target paths.
+   *
+   * @parm $target_paths
+   *   An array of the paths to validate.
+   * @parm $include
+   *   Boolean, TRUE if the paths are included or FALSE for exclude paths
+   *
+   * @return
+   *   Boolean of TRUE if the paths are valid or a string of the path that failed.
+   */
+  private function validatePaths($project_paths) {
+
+     // Validate entered paths to confirm the paths exist on the website
+    foreach ($project_paths as $path) {
+
+      // Check for site wide wildcard
+      if (strpos($path, '*') === 0) {
+
+        if (count($project_paths) == 1) {
+          return TRUE;
+        }
+        else {
+          return $path;
+        }
+
+      } // Path wildcards
+      elseif (strpos($path, '*') !== FALSE) {
+
+        $project_wildpath = substr($path, 0, -2);
+        if (!drupal_valid_path($project_wildpath, TRUE)) {
+
+          // Look for entries in url_alias
+          $query = db_query("SELECT * FROM {url_alias} WHERE
+            source LIKE :project_wildpath OR alias LIKE :project_wildpath",
+            array(':project_wildpath' => $project_wildpath . '%'));
+          $results = $query->fetchCol(0);
+          $project_wildpath_match = count($results);
+
+          // No matches found for wildcard path
+          if (!$project_wildpath_match) {
+            return $path;
+          }
+
+        }
+
+      } // Parameters
+      elseif (strpos($path, '?') !== FALSE) {
+
+        // Look for entries in menu_router
+        $project_parmpath = substr($path, 0, strpos($path, '?'));
+
+        // Look for entry in url_alias table
+        if ($this->lookupPathAlias($path) === FALSE &&
+            $this->lookupSystemPath($path) === FALSE &&
+            drupal_valid_path($project_parmpath, TRUE) === FALSE) {
+          return $path;
+        }
+
+      } // Validation if path valid menu router entry, includes support for <front>
+      elseif (drupal_valid_path($path, TRUE) === FALSE) {
+
+        // Look for entry in url_alias table
+        if ($this->lookupPathAlias($path) === FALSE &&
+            $this->lookupSystemPath($path) === FALSE) {
+          return $path;
+        }
+
+      }
+
+    }
+
+    return TRUE;
+
+  }
+
+  /**
+   * Helper function to lookup a path alias, given a path.
+   * This function acts as an adapter and passes back a return value
+   * like those of drupal_lookup_path(), which has been removed
+   * as of Drupal 8.
+   */
+  private function lookupPathAlias($path) {
+
+    $alias = \Drupal::service('path.alias_manager')->getPathAlias($path);
+    return (strcmp($alias, $path) == 0) ? FALSE : $alias;
+  }
+
+  /**
+   * Helper function to lookup a system path, given a path alias.
+   * This function acts as an adapter and passes back a return value
+   * like those of drupal_lookup_path(), which has been removed
+   * as of Drupal 8.
+   */
+  private function lookupSystemPath($alias) {
+
+    $path = \Drupal::service('path.alias_manager')->getSystemPath($alias);
+    return (strcmp($path, $alias) == 0) ? FALSE : $path;
+  }
+
 }
