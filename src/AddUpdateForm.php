@@ -10,7 +10,6 @@ namespace Drupal\optimizely;
 use Drupal\Core\Form\FormBase;
 use Drupal\Component\Utility\String;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Implements the form for the Add Projects page.
