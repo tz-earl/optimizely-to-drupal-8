@@ -14,6 +14,8 @@ use Drupal\Core\Form\FormBase;
  */
 class ProjectListForm extends FormBase {
 
+  use LookupPath;
+
   /**
    * {@inheritdoc}
    */
@@ -75,14 +77,14 @@ class ProjectListForm extends FormBase {
         if ($path == '<front>') {
           $config = \Drupal::config('system.site');
           $front_path = $config->get('page.front');
+          $front_path .= ' <-> ';
 
-          $path_alias = \Drupal::service('path.alias_manager')->getPathAlias($front_path);
-          if (strcmp($path_alias, $front_path) == 0) {  // No alias was found.
-            $path_alias = '';
-          }
-          $front_path .= ' <-> ' . $path_alias;
+          $path_alias = $this->lookupPathAlias($front_path);
+          $front_path .= $path_alias ? $path_alias : '';
+
           $path = htmlspecialchars('<front>') . ' (' . $front_path . ')';
         }
+
         $project_paths .= '<li>' . $path . '</li>';
       }
       $project_paths .= '</ul>';
