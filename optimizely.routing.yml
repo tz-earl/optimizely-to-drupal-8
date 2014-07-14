@@ -22,6 +22,14 @@ optimizely.add_update.oid:
   requirements:
     _permission: administer optimizely
 
+optimizely.delete.oid:
+  path: /admin/config/system/optimizely/delete/{oid}
+  defaults:
+    _form: \Drupal\optimizely\DeleteForm
+    _title: Optimizely Delete Project
+  requirements:
+    _permission: administer optimizely
+
 optimizely.settings:
   path: /admin/config/system/optimizely/settings
   defaults: 
