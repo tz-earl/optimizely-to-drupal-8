@@ -276,7 +276,7 @@ class AddUpdateForm extends FormBase {
 
       // Rebuild the provided paths to ensure Optimizely javascript is now included on paths
       if ($enabled) {
-        CacheRefresher::refreshCache($path_array);
+        CacheRefresher::doRefresh($path_array);
       }
 
     } // $oid is set, update existing entry
@@ -298,7 +298,7 @@ class AddUpdateForm extends FormBase {
       // to determine what cache paths needs to be refreshed
       $original_path_array = preg_split('/[\r\n]+/', $form_state['values']['optimizely_original_path'], -1, PREG_SPLIT_NO_EMPTY);
 
-      CacheRefresher::refreshCache($path_array, $original_path_array);
+      CacheRefresher::doRefresh($path_array, $original_path_array);
 
     }
 

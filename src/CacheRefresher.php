@@ -6,13 +6,13 @@ class CacheRefresher {
 
 
   /**
-   * refreshCache()
+   * doRefresh()
    *
    * @parm
    *   $path_array - An array of the target paths entries that the cache needs to
    *   be cleared. Each entry can also contain wildcards /* or variables "<front>".
    */
-  public static function refreshCache($path_array, $original_path_array = NULL) {
+  public static function doRefresh($path_array, $original_path_array = NULL) {
 
     // Determine protocol
     $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';

@@ -46,7 +46,7 @@ class DeleteForm extends ConfirmFormBase {
 
   public function submitForm(array &$form, array &$form_state) {
 
-  // Lookup entry details before delete
+    // Lookup entry details before delete
     $query = db_select('optimizely', 'o', array('target' => 'slave'))
       ->fields('o', array('path', 'enabled'))
       ->condition('o.oid', $this->oid, '=');
@@ -64,7 +64,7 @@ class DeleteForm extends ConfirmFormBase {
       
       // Always serialized when saved 
       $path_array = unserialize($record->path);
-      CacheRefresher::refreshCache($path_array);
+      CacheRefresher::doRefresh($path_array);
       
     }
 
