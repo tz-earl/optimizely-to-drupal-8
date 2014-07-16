@@ -17,7 +17,7 @@ trait LookupPath  {
    * like those of drupal_lookup_path(), which has been removed
    * as of Drupal 8.
    */
-  function lookupPathAlias($path) {
+  static function lookupPathAlias($path) {
 
     $alias = \Drupal::service('path.alias_manager')->getPathAlias($path);
     return (strcmp($alias, $path) == 0) ? FALSE : $alias;
@@ -29,7 +29,7 @@ trait LookupPath  {
    * like those of drupal_lookup_path(), which has been removed
    * as of Drupal 8.
    */
-  function lookupSystemPath($alias) {
+  static function lookupSystemPath($alias) {
 
     $path = \Drupal::service('path.alias_manager')->getSystemPath($alias);
     return (strcmp($path, $alias) == 0) ? FALSE : $path;

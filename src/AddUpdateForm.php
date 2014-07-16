@@ -215,12 +215,12 @@ class AddUpdateForm extends FormBase {
 
       // Confirm that the project paths point to valid site URLs
       $target_paths = preg_split('/[\r\n]+/', $form_state['values']['optimizely_path'], -1, PREG_SPLIT_NO_EMPTY);
-      $valid_path = $this->validatePaths($target_paths);
+      $valid_path = PathChecker::validatePaths($target_paths);
       if (!is_bool($valid_path)) {
         \Drupal::formBuilder()->setErrorByName('optimizely_path', $form_state,
-          t('The project path "!project_path" is not a valid path. The path or alias' . 
+          t('The project path "@project_path" is not a valid path. The path or alias' . 
             ' could not be resolved as a valid URL that will result in content on the site.', 
-            array('!project_path' => $valid_path)));
+            array('@project_path' => $valid_path)));
       }
 
       // There must be only one Optimizely javascript call on a page. 
@@ -228,14 +228,14 @@ class AddUpdateForm extends FormBase {
       // http://support.optimizely.com/customer/portal/questions/893051-multiple-code-snippets-on-same-page-ok-
 
       list($error_title, $error_path) =
-        $this->uniquePaths($target_paths, $form_state['values']['optimizely_oid']);
+        PathChecker::uniquePaths($target_paths, $form_state['values']['optimizely_oid']);
 
       if (!is_bool($error_title)) {
         \Drupal::formBuilder()->setErrorByName('optimizely_path', $form_state,
-          t('The path "!error_path" will result in a duplicate entry based on' . 
+          t('The path "@error_path" will result in a duplicate entry based on' . 
             ' the other project path settings. Optimizely does not allow more' . 
             ' than one project to be run on a page.', 
-            array('!error_path' => $error_path)));
+            array('@error_path' => $error_path)));
       }   
     }
 
@@ -304,286 +304,6 @@ class AddUpdateForm extends FormBase {
 
     // Return to project listing page
     $form_state['redirect_route']['route_name'] = 'optimizely.listing';
-  }
-
-  /**
-   * validatePaths()
-   * 
-   * Validate the target paths.
-   *
-   * @parm $target_paths
-   *   An array of the paths to validate.
-   * @parm $include
-   *   Boolean, TRUE if the paths are included or FALSE for exclude paths
-   *
-   * @return
-   *   Boolean of TRUE if the paths are valid or a string of the path that failed.
-   */
-  private function validatePaths($project_paths) {
-
-    // Validate entered paths to confirm the paths exist on the website
-    foreach ($project_paths as $path) {
-
-      // Check for site wide wildcard
-      if (strpos($path, '*') === 0) {
-
-        if (count($project_paths) == 1) {
-          return TRUE;
-        }
-        else {
-          return $path;
-        }
-
-      } // Path wildcards
-      elseif (strpos($path, '*') !== FALSE) {
-
-        $project_wildpath = substr($path, 0, -2);
-        if (!drupal_valid_path($project_wildpath, TRUE)) {
-
-          // Look for entries in url_alias
-          $query = db_query("SELECT * FROM {url_alias} WHERE
-            source LIKE :project_wildpath OR alias LIKE :project_wildpath",
-            array(':project_wildpath' => $project_wildpath . '%'));
-          $results = $query->fetchCol(0);
-          $project_wildpath_match = count($results);
-
-          // No matches found for wildcard path
-          if (!$project_wildpath_match) {
-            return $path;
-          }
-
-        }
-
-      } // Parameters
-      elseif (strpos($path, '?') !== FALSE) {
-
-        // Look for entries in menu_router
-        $project_parmpath = substr($path, 0, strpos($path, '?'));
-
-        // Look for entry in url_alias table
-        if ($this->lookupPathAlias($path) === FALSE &&
-            $this->lookupSystemPath($path) === FALSE &&
-            drupal_valid_path($project_parmpath, TRUE) === FALSE) {
-          return $path;
-        }
-
-      } // Validation if path valid menu router entry, includes support for <front>
-      elseif (drupal_valid_path($path, TRUE) === FALSE) {
-
-        // Look for entry in url_alias table
-        if ($this->lookupPathAlias($path) === FALSE &&
-            $this->lookupSystemPath($path) === FALSE) {
-          return $path;
-        }
-
-      }
-
-    }
-
-    return TRUE;
-
-  }
-
-  /*
-   * Compare target path against the project paths to confirm they're unique
-   *
-   * @parm
-   *   $target_paths - the paths entered for a new project entry, OR
-   *   the paths of an existing project entry that has been enabled.
-   * @parm
-   *   $target_paths = NULL : the oid of the project entry that has been enabled
-   *
-   * @return
-   *   $target_path: the path that is a duplicate that must be addressed to
-   *   enable or create the new project entry, or TRUE if unique paths.
-   */
-  private function uniquePaths($target_paths, $target_oid = NULL) {
-
-    // Look up alternative paths
-    $target_paths = $this->collectAlias($target_paths);
-
-    // Look for duplicate paths in submitted $target_paths
-    $duplicate_target_path = $this->duplicateCheck($target_paths);
-
-    // Look for duplicate paths within target paths
-    if (!$duplicate_target_path) {
-
-      // Collect all of the existing project paths that are enabled,
-      $query = db_select('optimizely', 'o', array('target' => 'slave'))
-        ->fields('o', array('oid', 'project_title', 'path'))
-        ->condition('o.enabled', 1, '=');
-
-      // Add target_oid to query when it's an update, $target_oid is will be defined
-      if ($target_oid != NULL) {
-        $query = $query->condition('o.oid', $target_oid, '<>');
-      }
-
-      $projects = $query->execute();
-
-      // No other enabled projects
-      if ($query->countQuery()->execute()->fetchField() == 0) {
-        return array(TRUE, NULL);
-      }
-
-      $all_project_paths = array();
-
-      // Build array of all the project entry paths
-      foreach ($projects as $project) {
-
-        // Collect all of the path values and merge into collective array
-        $project_paths = unserialize($project->path);
-        $all_project_paths = array_merge($all_project_paths, $project_paths);
-
-      }
-
-      // Add any additional aliases to catch all match possiblities
-      $all_project_paths = $this->collectAlias($all_project_paths);
-
-      // Convert array into string for drupal_match_path()
-      $all_project_paths_string = implode("\n", $all_project_paths);
-
-      // Check all of the paths for all of the active project entries to make sure
-      // the paths are unique
-      foreach ($target_paths as $target_path) {
-
-        // "*" found in path
-        if (strpos($target_path, '*') !== FALSE) {
-
-          // Look for wild card match if not sitewide
-          if (strpos($target_path, '*') !== 0) {
-
-            $target_path = substr($target_path, 0, -2);
-
-            // Look for duplicate path due to wild card
-            foreach ($all_project_paths as $all_project_path) {
-
-              //
-              if (strpos($all_project_path, $target_path) === 0 && $all_project_path != $target_path) {
-                return array($project->project_title, $target_path);
-              }
-
-            }
-
-          } // If sitewide wild card then it must be the only enabled path to be unique
-          elseif (strpos($target_path, '*') === 0 &&
-                  (count($target_paths) > 1 || count($all_project_paths) > 0)) {
-            return array($project->project_title, $target_path);
-          }
-
-          // Look for sitewide wild card in target project paths
-          if (in_array('*', $all_project_paths)) {
-            return array($project->project_title, $target_path);
-          }
-
-        } // Parameters found, collect base path for comparison to the other project path entries
-        elseif (strpos($target_path, '?') !== FALSE) {
-          $target_path = substr($target_path, 0, strpos($target_path, '?'));
-        }
-
-        // Look for duplicates
-        if (drupal_match_path($target_path, $all_project_paths_string)) {
-            return array($project->project_title, $target_path);
-        }
-
-      }
-
-      return array(TRUE, NULL);
-
-    }
-    else {
-      return array(NULL, $duplicate_target_path);
-    }
-
-  }
-
-  /*
-   * Lookup all alternatives to the group of paths - alias, <front>
-   *
-   * @parm
-   *   $paths - a set of paths to be reviewed for alternatives
-   *
-   * @return
-   *   $paths - an updated list of paths that include the additional source and alias values. 
-   */
-  private function collectAlias($paths) {
-
-    // Add alternative values - alias, source, <front> to ensure matches
-    // also check different possibilities
-    foreach ($paths as $path_count => $path) {
-
-      // Remove parameters
-      if (strpos($path, '?') !== FALSE) {
-        $path = substr($path, 0, strpos($path, '?'));
-        $paths[$path_count] = $path;
-      }
-
-      !$this->lookupPathAlias($path) ? : $paths[] = $this->lookupPathAlias($path);
-      !$this->lookupSystemPath($path) ? : $paths[] = $this->lookupSystemPath($path);
-
-      // Collect all the possible values to match <front>
-      if ($path == '<front>') {
-
-        $frontpage = \Drupal::config('system.site')->get('page.front');
-        if ($frontpage) {
-          $paths[] = $frontpage;
-          $paths[] = $this->lookupPathAlias($frontpage);
-        }
-
-      }
-
-    }
-
-    return $paths;
-
-  }
-
-  /*
-   * Compare paths within passed array to ensure each item resolves to a unique entry
-   *
-   * @parm
-   *   $paths - a set of paths to be reviewed for uniqueness
-   *
-   * @return
-   *   FALSE if no duplicates found otherwaise the dusplicate path is returned. 
-   */
-  private function duplicateCheck($paths) {
-
-    $unreviewed_paths = $paths;
-
-    // Check all of the paths
-    foreach ($paths as $path) {
-
-      // Remove path that's being processed from the front of the list
-      array_shift($unreviewed_paths);
-
-      // "*" found in path
-      if (strpos($path, '*') !== FALSE) {
-
-        // Look for wild card match that's not sitewide (position not zero (0))
-        if (strpos($path, '*') !== 0) {
-
-          $path = substr($path, 0, -2);
-
-          foreach ($unreviewed_paths as $unreviewed_path) {
-            if (strpos($unreviewed_path, $path) !== FALSE) {
-              return $path . '/*';
-            }
-          }
-
-        } // If sitewide wild card then it must be the only path in path set
-        elseif (strpos($path, '*') === 0 && count($paths) > 1) {
-          return $path;
-        }
-
-      }
-      elseif (in_array($path, $unreviewed_paths)) {
-        return $path;
-      }
-
-    }
-
-    return FALSE;
-
   }
 
 }
