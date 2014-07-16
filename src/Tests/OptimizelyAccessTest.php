@@ -168,8 +168,6 @@ class OptimizelyAccessTest extends WebTestBase {
     $this->assertResponse($access_ok, 
       "User with $this->optimizelyPermission permission <strong>may</strong>" . 
       " access AJAX callback URL -> $this->ajaxCallbackPage");
-
-    //*** to do:  admin/config/system/optimizely/delete/%
     
     $this->drupalLogout();
 
