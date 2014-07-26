@@ -24,7 +24,7 @@
         var post = "target_oid=" + target_oid + "&target_enable=" + target_enable;
         
         $.ajax({
-          'url': '/ajax/optimizely',
+          'url': drupalSettings.path.basePath + 'ajax/optimizely',
           'type': 'POST',
           'dataType': 'json',
           'data': post,
@@ -36,7 +36,7 @@
             if (data.status == "updated") {
                       
               // Toggle enable / disabled class
-              if ($(target_this).attr('checked')) {
+              if ($(target_this).is(':checked')) {
                 $(target_this).parents('tr').find('td').addClass('enabled').removeClass('disabled');
                 $(target_this).parents('tr').find('div.status-' + data.oid).text("Project enabled successfully." + data.message);
                 $(target_this).parents('tr').find('div.status-' + data.oid).fadeOut(6000, function() { $(this).text('').css('display', '') });
