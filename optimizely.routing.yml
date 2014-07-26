@@ -37,3 +37,12 @@ optimizely.settings:
     _title: Optimizely
   requirements:
     _permission: administer optimizely
+
+ajax.enable:
+  path: /ajax/optimizely
+  defaults:
+    _controller: \Drupal\optimizely\AjaxEnable::enableDisable
+    _title: Optimizely Administer AJAX
+  requirements:
+    _permission: administer optimizely
+    _format: json
