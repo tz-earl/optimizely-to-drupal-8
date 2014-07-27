@@ -163,11 +163,6 @@ class OptimizelyAccessTest extends WebTestBase {
     $this->assertResponse($access_ok, 
       "User with $this->optimizelyPermission permission <strong>may</strong>" . 
       " access project settings page -> $this->settingsPage");
-
-    $this->drupalGet($this->ajaxCallbackPage);
-    $this->assertResponse($access_ok, 
-      "User with $this->optimizelyPermission permission <strong>may</strong>" . 
-      " access AJAX callback URL -> $this->ajaxCallbackPage");
     
     $this->drupalLogout();
 
