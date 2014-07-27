@@ -29,7 +29,7 @@ class OptimizelySchemaTest extends WebTestBase {
    */
   public static function getInfo() {
     return array(
-      'name' => 'Optimizely Schema Creation Test',
+      'name' => 'Optimizely Schema Creation',
       'description' => 'Ensure schema creation.',
       'group' => 'Optimizely',
     );

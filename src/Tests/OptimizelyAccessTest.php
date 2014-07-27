@@ -39,7 +39,7 @@ class OptimizelyAccessTest extends WebTestBase {
    */
   public static function getInfo() {
     return array(
-      'name' => 'Optimizely Access Test',
+      'name' => 'Optimizely Access',
       'description' => 'Test that no part of the Optimizely module administration' . 
         ' interface can be accessed without the necessary permissions.',
       'group' => 'Optimizely',

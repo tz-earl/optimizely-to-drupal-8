@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Test the account Id and the Default project.
  */
-class OptimizelyDefaultSettingsTest extends WebTestbase {
+class OptimizelyDefaultSettingsTest extends WebTestBase {
 
   protected $settingsPage = 'admin/config/system/optimizely/settings';
   protected $updateDefaultProjPage = 'admin/config/system/optimizely/add_update/1';
@@ -30,7 +30,7 @@ class OptimizelyDefaultSettingsTest extends WebTestbase {
   public static function getInfo() {
 
     return array(
-      'name' => 'Optimizely Default Settings Test',
+      'name' => 'Optimizely Default Settings',
       'description' => 'Ensure that project settings work correctly',
       'group' => 'Optimizely',
     );
