@@ -116,13 +116,13 @@ class OptimizelyDefaultProjectTest extends WebTestBase {
     
     // Title field set to Default, not accessible
     $this->assertPattern(
-      ':<input( .*? | )disabled="disabled"( .*? | )id="edit-optimizely-project-title"( .*? | )value="Default"( .*?)?/>:', 
+      ':<input( [^>]*? | )disabled="disabled"( [^>]*? | )id="edit-optimizely-project-title"( [^>]*? | )value="Default"( [^>]*?)?/>:', 
       '<strong>Project title field is not editable and set to "Default"</strong>.',
       'Optimizely');
     
     // Project Code field not set (Undefined), not accessible
     $this->assertPattern(
-      ':<input( .*? | )disabled="disabled"( .*? | )id="edit-optimizely-project-code"( .*? | )value="Undefined"( .*?)?/>:',
+      ':<input( [^>]*? | )disabled="disabled"( [^>]*? | )id="edit-optimizely-project-code"( [^>]*? | )value="Undefined"( [^>]*?)?/>:',
       '<strong>Project code field is not editable and set to "Undefined".</strong>',
       'Optimizely');
     
@@ -132,7 +132,7 @@ class OptimizelyDefaultProjectTest extends WebTestBase {
                       'Optimizely');
 
     // Check default Default project path is set to sitewide wild card
-    $this->assertPattern(':<textarea( .*? | )id="edit-optimizely-path"( .*?)?>\*</textarea>:', 
+    $this->assertPattern(':<textarea( [^>]*? | )id="edit-optimizely-path"( [^>]*?)?>\*</textarea>:', 
                           '<strong>Default project path set to sitewide wild card "*".</strong>',
                           'Optimizely');
     
