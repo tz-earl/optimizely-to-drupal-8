@@ -26,23 +26,24 @@ class AjaxEnable {
     // Retrieve the json POST values
     $target_oid = $_POST['target_oid'];
     $target_enable = $_POST['target_enable'];
+
+    // Lookup the current project settings
+    $query = db_select('optimizely', 'o', array('target' => 'slave'))
+      ->fields('o', array('path', 'project_code'))
+      ->condition('o.oid', $target_oid, '=');
+    $result = $query->execute()->fetchObject();
+
+    $target_paths = unserialize($result->path);
   
     // Only check path values if project is being enabled,
     // Project is currently disabled (FALSE) and is now being enabled (TRUE)
     if ($target_enable == TRUE) {
-    
-      // Lookup the current project settings
-      $query = db_select('optimizely', 'o', array('target' => 'slave'))
-        ->fields('o', array('path', 'project_code'))
-        ->condition('o.oid', $target_oid, '=');
-      $result = $query->execute()->fetchObject();
 
 
       // Prevent the Default project from being enabled when the project code is not set
       if (!($target_oid == 1 && $result->project_code == 0)) {
       
         // Check that the paths are valid for the newly enabled project
-        $target_paths = unserialize($result->path);
         $valid_paths = PathChecker::validatePaths($target_paths);
         
         // Check to see if the enable project has path entries that will result in
@@ -51,19 +52,19 @@ class AjaxEnable {
           list($unique_path, $target_path) = PathChecker::uniquePaths($target_paths, $target_oid);
           if ($unique_path !== TRUE) {
            $message =  t('Project was not enabled due to path setting resulting' . 
-                                ' in duplicate path entries between enabled projects.'); 
+                        ' in duplicate path entries between enabled projects.'); 
           }
         }
         else {
           $message = t('Project was not enabled due to path setting: ' . 
-                              $valid_paths . ' resulting in an invalid path.');
+                        $valid_paths . ' resulting in an invalid path.');
         }
         
       }
       else {
         $default_project = TRUE;
         $message = t('Default project not enabled.' . 
-                            ' Enter Optimizely ID in Account Info page.');
+                      ' Enter Optimizely ID in Account Info page.');
       }
 
     }
