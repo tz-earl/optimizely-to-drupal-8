@@ -11,7 +11,7 @@ description: >
   javascript files to enable A/B testing.
 
 package: A/B Testing
-php: 5.2
+php: 5.4
 project: optimizely
 version: 0.1
 
