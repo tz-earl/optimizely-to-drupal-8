@@ -19,6 +19,8 @@
  * 7.x-2.x by Darren "Dee" Lee (DeeZone: http://drupal.org/user/288060) 
  * and Peter Lehrer (plehrer: http://drupal.org/user/2257350)
  * Sponsored by DoSomething.org (http://www.dosomething.org)
+ *
+ * 8.x-dev by Earl Fong (tz_earl: https://www.drupal.org/user/2531114/)
  */
 
 /**
@@ -116,4 +118,152 @@ function optimizely_theme($existing, $type, $theme, $path) {
       'template' => 'optimizely-add-update-form',
      ),
   );
+}
+
+/**
+ * Implements hook_page_build().
+ *
+ * Checks each page that is about to be rendered as to
+ * whether to insert a snippet of Optimizely code or not.
+ */
+function optimizely_page_build(&$page) {
+
+  $current_path = current_path();
+  $current_path_alias = _lookup_path_alias($current_path);
+
+  $wildcard_match = FALSE;
+  $add_snippet = FALSE;
+
+  // Load all entries in the optimizely table
+  $query = db_select('optimizely', 'o', array('target' => 'slave'))
+    ->fields('o')
+    ->condition('o.enabled', 1, '=')
+    ->orderBy('oid');
+
+  // Fetch the result set.
+  $result = $query->execute();
+
+  if (!$result) {
+    return;
+  }
+
+  // Query results found
+
+  // Loop through each row of the found results
+  while ($project = $result->fetchAssoc()) {
+
+    // Only process the entries that are enabled
+    if (!$project['enabled']) {
+      continue;
+    }
+
+
+    // Target paths from database for project and get real path for <front> if a part of target paths for project
+    $project_paths = unserialize($project['path']);
+    $front_index = array_search('<front>', $project_paths);
+    if (is_int($front_index)) {
+      $project_paths[$front_index] = \Drupal::config('system.site')->get('page.front');    
+    }
+
+    // Check all paths for alias or sytem URL values, foreach loop based on
+    // orginal array value, addiitonal values added will not effect the array
+    foreach ($project_paths as $proj_path) {
+
+      // Remove parameters
+      if (strpos($proj_path, '?') !== FALSE) {
+
+        $proj_path = substr($proj_path, 0, strpos($proj_path, '?'));
+
+        if ( stristr($current_path, $proj_path) ||
+             stristr(_lookup_path_alias($current_path), $proj_path) ||
+             stristr(_lookup_system_path($current_path), $proj_path) ) {
+          $add_snippet = TRUE;
+          break 2;
+        }
+
+      }
+
+      // Look for wildcard match
+      if (strpos($proj_path, '*') !== FALSE) {
+
+        // Sitewide wild card
+        if ($proj_path == '*') {
+          $add_snippet = TRUE;
+          break 2;
+        }
+        else {
+
+          // Remove wildcard, get base path(s)
+          $proj_path = substr($proj_path, 0, -2);
+
+          // Look for wildcard match
+          if ( stristr($current_path, $proj_path) ||
+               stristr(_lookup_path_alias($current_path), $proj_path) ||
+               stristr(_lookup_system_path($current_path), $proj_path) ) {
+            $add_snippet = TRUE;
+            break 2;
+          }
+
+        }
+
+      }
+
+      // Build out $project_paths with possible source and alias values to
+      // test with drupal_match_path()
+      $proj_path_source = _lookup_system_path($proj_path);
+      if ($proj_path_source) {
+         $project_paths[] = $proj_path_source;
+      }
+
+      $proj_path_alias = _lookup_path_alias($proj_path);
+      if ($proj_path_alias) {
+         $project_paths[] = $proj_path_alias;
+      }
+
+      // Prep for drupal_match_path()
+      $project_paths = implode("\n", array_unique($project_paths));
+
+      if (drupal_match_path($current_path, $project_paths) ||
+          drupal_match_path($current_path_alias, $project_paths)) {
+        $add_snippet = TRUE;
+        break;
+      }
+
+    }
+
+  }
+
+  if ($add_snippet) {
+
+    // Adjust path to support secure pages
+    $protocol = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ? 'https' : 'http';
+
+    // Add javascript call to page markup
+    $snippet_url = $protocol . '://cdn.optimizely.com/js/' . $project['project_code'] . '.js';
+    $page['#attached']['js'][] = array(
+                                    'type' => 'external',
+                                    'data' => $snippet_url,
+                                  );
+
+    $proj = $project['project_code'];  //*** For testing
+    drupal_set_message("Optimizely snippet added to this page for $proj", 'status');  //*** For testing
+
+  }
+
+}
+
+/**
+ * These two functions are redundant with trait LookupPath,
+ * but I haven't been able to re-use the trait in this .module file.
+ */
+function _lookup_path_alias($path) {
+
+  $alias = \Drupal::service('path.alias_manager')->getPathAlias($path);
+  return (strcmp($alias, $path) == 0) ? FALSE : $alias;
+}
+
+function _lookup_system_path($alias) {
+
+  $path = \Drupal::service('path.alias_manager')->getSystemPath($alias);
+  return (strcmp($path, $alias) == 0) ? FALSE : $path;
 }
