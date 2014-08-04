@@ -19,7 +19,7 @@ trait LookupPath  {
    */
   static function lookupPathAlias($path) {
 
-    $alias = \Drupal::service('path.alias_manager')->getPathAlias($path);
+    $alias = \Drupal::service('path.alias_manager')->getAliasByPath($path);
     return (strcmp($alias, $path) == 0) ? FALSE : $alias;
   }
 
@@ -31,7 +31,7 @@ trait LookupPath  {
    */
   static function lookupSystemPath($alias) {
 
-    $path = \Drupal::service('path.alias_manager')->getSystemPath($alias);
+    $path = \Drupal::service('path.alias_manager')->getPathByAlias($alias);
     return (strcmp($path, $alias) == 0) ? FALSE : $path;
   }
 
