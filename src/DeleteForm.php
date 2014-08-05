@@ -8,6 +8,8 @@
 namespace Drupal\optimizely;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Url;
+
 
 /**
  * Implements the confirmation form for deleting a project.
@@ -34,7 +36,7 @@ class DeleteForm extends ConfirmFormBase {
   }
 
   public function getCancelRoute() {
-    return array('route_name' => 'optimizely.listing');
+    return new Url('optimizely.listing');
   }
 
   public function buildForm(array $form, array &$form_state, $oid = NULL) {
