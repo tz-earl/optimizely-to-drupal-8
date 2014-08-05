@@ -213,15 +213,15 @@ function optimizely_page_build(&$page) {
          $project_paths[] = $proj_path_alias;
       }
 
-      // Prep for drupal_match_path()
-      $project_paths = implode("\n", array_unique($project_paths));
+    }
 
-      if (drupal_match_path($current_path, $project_paths) ||
-          drupal_match_path($current_path_alias, $project_paths)) {
-        $add_snippet = TRUE;
-        break;
-      }
+    // Prep for drupal_match_path()
+    $project_paths = implode("\n", array_unique($project_paths));
 
+    if (drupal_match_path($current_path, $project_paths) ||
+        drupal_match_path($current_path_alias, $project_paths)) {
+      $add_snippet = TRUE;
+      break;
     }
 
   }
