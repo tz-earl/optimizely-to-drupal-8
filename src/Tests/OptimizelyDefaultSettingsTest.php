@@ -64,7 +64,8 @@ class OptimizelyDefaultSettingsTest extends WebTestBase {
     $optimizely_id = db_query('SELECT project_code FROM {optimizely} WHERE oid = 1')
                       ->fetchField();
     $this->assertEqual($optimizely_id, $edit['optimizely_id'], 
-                        t('Optimizely ID number added to Default project.'));
+                        t('Optimizely ID number added to Default project.'),
+                        'Optimizely');
     
     //--- Enable the default project.
     $edit = array(    
@@ -73,7 +74,8 @@ class OptimizelyDefaultSettingsTest extends WebTestBase {
     $this->drupalPostForm($this->updateDefaultProjPage, $edit, t('Update'));
     
     $enabled = db_query('SELECT enabled FROM {optimizely} WHERE oid = 1')->fetchField();
-    $this->assertEqual($enabled, $edit['optimizely_enabled'], t('The Default project was enabled.')); 
+    $this->assertEqual($enabled, $edit['optimizely_enabled'], t('The Default project was enabled.'),
+                        'Optimizely'); 
     
     //--- Disable the default project.
     $edit = array(    
@@ -82,7 +84,8 @@ class OptimizelyDefaultSettingsTest extends WebTestBase {
     $this->drupalPostForm($this->updateDefaultProjPage, $edit, t('Update'));
     
     $enabled = db_query('SELECT enabled FROM {optimizely} WHERE oid = 1')->fetchField();
-    $this->assertEqual($enabled, $edit['optimizely_enabled'], t('The Default project was disabled.')); 
+    $this->assertEqual($enabled, $edit['optimizely_enabled'], t('The Default project was disabled.'), 
+                        'Optimizely');
   }
 
 }
