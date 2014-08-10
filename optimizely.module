@@ -238,8 +238,8 @@ function optimizely_page_build(&$page) {
                                     'data' => $snippet_url,
                                   );
 
-    $proj = $project['project_code'];  //*** For testing
-    drupal_set_message("Optimizely snippet added to this page for $proj", 'status');  //*** For testing
+    // $proj = $project['project_code'];  //*** For testing
+    // drupal_set_message("Optimizely snippet added to this page for $proj", 'status');  //*** For testing
 
   }
 
