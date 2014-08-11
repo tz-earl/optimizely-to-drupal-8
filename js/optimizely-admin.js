@@ -75,7 +75,7 @@
             });
             
           },
-          'error': function(data) {
+          'error': function (data, status, error) {
                      
             $(document).ready(function () {
 
