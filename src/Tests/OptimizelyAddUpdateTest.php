@@ -72,15 +72,15 @@ class OptimizelyAddUpdateTest extends WebTestBase {
     // N.B. Do NOT use randomString() to generate string values because the
     // resulting strings may contain special chars that break the SQL
     // statements as well as possibly causing other problems. 
-    // Use randomName() instead since it generates letters and numbers only.
+    // Use randomMachineName() instead since it generates letters and numbers only.
 
     //----- create page  
     $settings = array(
       'type' => 'page',
-      'title' => $this->randomName(32),
+      'title' => $this->randomMachineName(32),
       'langcode' => \Drupal\Core\Language\LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'body' => array(
-                  array('value' => $this->randomName(64),
+                  array('value' => $this->randomMachineName(64),
                         'format' => filter_default_format(),
                         ),
                 ),
@@ -90,12 +90,12 @@ class OptimizelyAddUpdateTest extends WebTestBase {
     // Create the url alias
     $edit_node1 = array();
     $edit_node1['source'] = 'node/' . $node1->id();
-    $edit_node1['alias'] = $this->randomName(10);
+    $edit_node1['alias'] = $this->randomMachineName(10);
     $this->drupalPostForm($this->addAliasPage, $edit_node1, t('Save'));
 
     // Add a project with a path to the alias.
     $edit = array(
-      'optimizely_project_title' => $this->randomName(8),
+      'optimizely_project_title' => $this->randomMachineName(8),
       'optimizely_project_code' => rand(0,10000),
       'optimizely_path' => $edit_node1['alias'],
       'optimizely_enabled' => rand(0, 1),
@@ -113,10 +113,10 @@ class OptimizelyAddUpdateTest extends WebTestBase {
     //----- create page  
     $settings_2 = array(
       'type' => 'page',
-      'title' => $this->randomName(32),
+      'title' => $this->randomMachineName(32),
       'langcode' => \Drupal\Core\Language\LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'body' => array(
-                  array('value' => $this->randomName(64),
+                  array('value' => $this->randomMachineName(64),
                         'format' => filter_default_format(),
                         ),
                 ),
@@ -126,12 +126,12 @@ class OptimizelyAddUpdateTest extends WebTestBase {
     // Create another url alias
     $edit_node2 = array();
     $edit_node2['source'] = 'node/' . $node2->id();
-    $edit_node2['alias'] = $this->randomName(10);
+    $edit_node2['alias'] = $this->randomMachineName(10);
     $this->drupalPostForm($this->addAliasPage, $edit_node2, t('Save'));
 
     // Update the existing project with the other alias.
     $edit_2 = array(
-      'optimizely_project_title' => $this->randomName(8),
+      'optimizely_project_title' => $this->randomMachineName(8),
       'optimizely_project_code' => rand(0,10000),
       'optimizely_path' => $edit_node2['alias'],
       'optimizely_enabled' => rand(0, 1),

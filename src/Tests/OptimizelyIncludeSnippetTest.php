@@ -68,7 +68,7 @@ class OptimizelyIncludeSnippetTest extends WebTestBase {
         
     //array holding project field values    
     $edit = array(
-      'optimizely_project_title' => $this->randomName(8),
+      'optimizely_project_title' => $this->randomMachineName(8),
       'optimizely_project_code' => rand(0,10000),
       'optimizely_path' => "node/" . $node1->id() . "\n" . "node/" . $node2->id(),
       'optimizely_enabled' => 1,
@@ -109,10 +109,10 @@ class OptimizelyIncludeSnippetTest extends WebTestBase {
 
     $settings = array(
       'type' => 'page',
-      'title' => $this->randomName(32),
+      'title' => $this->randomMachineName(32),
       'langcode' => \Drupal\Core\Language\LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'body' => array(
-                  array('value' => $this->randomName(64),
+                  array('value' => $this->randomMachineName(64),
                         'format' => filter_default_format(),
                         ),
                 ),

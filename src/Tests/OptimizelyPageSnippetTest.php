@@ -119,10 +119,10 @@ class OptimizelyPageSnippetTest extends WebTestBase {
         // create page  
         $settings = array(
           'type' => 'page',
-          'title' => $this->randomName(32),
+          'title' => $this->randomMachineName(32),
           'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
           'body' => array(
-                      array('value' => $this->randomName(64),
+                      array('value' => $this->randomMachineName(64),
                             'format' => filter_default_format(),
                             ),
                     ),
@@ -134,12 +134,12 @@ class OptimizelyPageSnippetTest extends WebTestBase {
 
         $random_alias_node = mt_rand(0, 1);
         if ($random_alias_node) {
-          $alias = $this->randomName(10);
+          $alias = $this->randomMachineName(10);
   
           // Random subpath alias
           $random_subalias_node = mt_rand(0, 1);
           if ($random_subalias_node) {
-            $subpath = $this->randomName(10);
+            $subpath = $this->randomMachineName(10);
             $alias = $subpath . '/' . $alias;
           }
           
@@ -197,7 +197,7 @@ class OptimizelyPageSnippetTest extends WebTestBase {
       
       // Add project with path setting to page
       $edit = array(
-        'optimizely_project_title' => $this->randomName(8),
+        'optimizely_project_title' => $this->randomMachineName(8),
         'optimizely_project_code' => $this->projectCode[$project_count],
         'optimizely_path' => $this->projectPaths[$project_count],
         'optimizely_enabled' => 0,

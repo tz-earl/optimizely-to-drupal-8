@@ -76,7 +76,7 @@ class OptimizelyAliasIncludeSnippetTest extends WebTestBase {
         
     //array holding project field values    
     $edit = array(
-      'optimizely_project_title' => $this->randomName(8),
+      'optimizely_project_title' => $this->randomMachineName(8),
       'optimizely_project_code' => rand(0,10000),
       'optimizely_path' => $alias1 . "\n" . $alias2,
       'optimizely_enabled' => 1,
@@ -117,10 +117,10 @@ class OptimizelyAliasIncludeSnippetTest extends WebTestBase {
 
     $settings = array(
       'type' => 'page',
-      'title' => $this->randomName(32),
+      'title' => $this->randomMachineName(32),
       'langcode' => \Drupal\Core\Language\LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'body' => array(
-                  array('value' => $this->randomName(64),
+                  array('value' => $this->randomMachineName(64),
                         'format' => filter_default_format(),
                         ),
                 ),
@@ -133,7 +133,7 @@ class OptimizelyAliasIncludeSnippetTest extends WebTestBase {
     
     $edit_node = array();
     $edit_node['source'] = 'node/' . $node->id();
-    $edit_node['alias'] = $this->randomName(10);
+    $edit_node['alias'] = $this->randomMachineName(10);
     $this->drupalPostForm($this->addAliasPage, $edit_node, t('Save')); 
     // @todo create alias in 'node/add/page'
 

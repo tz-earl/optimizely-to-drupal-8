@@ -66,10 +66,10 @@ class OptimizelyEnableDisableTest extends WebTestBase {
     //----- create page  
     $settings = array(
       'type' => 'page',
-      'title' => $this->randomName(32),
+      'title' => $this->randomMachineName(32),
       'langcode' => \Drupal\Core\Language\LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'body' => array(
-                  array('value' => $this->randomName(64),
+                  array('value' => $this->randomMachineName(64),
                         'format' => filter_default_format(),
                         ),
                 ),
@@ -79,12 +79,12 @@ class OptimizelyEnableDisableTest extends WebTestBase {
     // Create the url alias
     $edit_node = array();
     $edit_node['source'] = 'node/' . $node->id();
-    $edit_node['alias'] = $this->randomName(10);
+    $edit_node['alias'] = $this->randomMachineName(10);
     $this->drupalPostForm($this->addAliasPage, $edit_node, t('Save'));
 
     // Add a project with a path to the alias.
     $edit = array(
-      'optimizely_project_title' => $this->randomName(8),
+      'optimizely_project_title' => $this->randomMachineName(8),
       'optimizely_project_code' => mt_rand(0,10000),
       'optimizely_path' => $edit_node['alias'],
       'optimizely_enabled' => 0,
