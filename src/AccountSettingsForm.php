@@ -7,6 +7,7 @@
 
 namespace Drupal\optimizely;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements the form for Account Info.
@@ -23,7 +24,7 @@ class AccountSettingsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $settings_form['#theme'] = 'optimizely_account_settings_form';
     $settings_form['#attached'] = array('css' => array
       (
@@ -55,17 +56,17 @@ class AccountSettingsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!preg_match('/^\d+$/', $form_state['values']['optimizely_id'])) {
-      \Drupal::formBuilder()->setErrorByName('optimizely_id', $form_state,
-                                              $this->t('Your Optimizely ID should be numeric.'));
+      $form_state->setErrorByName('optimizely_id',
+                                  $this->t('Your Optimizely ID should be numeric.'));
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
 
     // Store the optimizely account id number.
     $optimizely_id = $form_state['values']['optimizely_id'];
@@ -85,7 +86,7 @@ class AccountSettingsForm extends FormBase {
       ' This will apply the default Optimizely project tests sitewide.'), 'status');
 
     // Redirect back to projects listing.
-    $form_state['redirect_route']['route_name'] = 'optimizely.listing';
+    $form_state->setRedirect('optimizely.listing');
 
     return;
   }

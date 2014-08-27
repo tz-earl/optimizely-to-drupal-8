@@ -9,6 +9,7 @@ namespace Drupal\optimizely;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormStateInterface;
 
 
 /**
@@ -28,7 +29,7 @@ class AddUpdateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $target_oid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $target_oid = NULL) {
 
     $addupdate_form = array();
     $addupdate_form['#theme'] = 'optimizely_add_update_form';
@@ -163,17 +164,17 @@ class AddUpdateForm extends FormBase {
    * entry which uses the account ID but should support an additional entry
    * to allow for custom settings.
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
 
     // Watch for "Undefined" value in Project Code, Account ID needed in Settings page
     if ($form_state['values']['optimizely_project_code'] == "Undefined") {
-      \Drupal::formBuilder()->setErrorByName('optimizely_project_code', $form_state,
+      $form_state->setErrorByName('optimizely_project_code',
         $this->t('The Optimizely Account ID must be set in the' . 
                   ' <a href="/admin/config/system/optimizely/settings">Account Info</a>' . 
                   ' page. The account ID is used as the default Optimizely Project Code.'));
     } // Validate that the project code entered is a number
     elseif (!ctype_digit($form_state['values']['optimizely_project_code'])) {
-      \Drupal::formBuilder()->setErrorByName('optimizely_project_code', $form_state,
+      $form_state->setErrorByName('optimizely_project_code',
         $this->t('The project code !code must only contain digits.', 
           array('!code' => $form_state['values']['optimizely_project_code'])));
     }
@@ -201,7 +202,7 @@ class AddUpdateForm extends FormBase {
         $found_entry_title = $results[0];
 
         // Flag the project code form field
-        \Drupal::formBuilder()->setErrorByName('optimizely_project_code', $form_state,
+        $form_state->setErrorByName('optimizely_project_code',
           $this->t('The project code (!project_code) already has an entry' . 
                     ' in the "!found_entry_title" project.', 
                     array('!project_code' => $form_state['values']['optimizely_project_code'], 
@@ -217,7 +218,7 @@ class AddUpdateForm extends FormBase {
       $target_paths = preg_split('/[\r\n]+/', $form_state['values']['optimizely_path'], -1, PREG_SPLIT_NO_EMPTY);
       $valid_path = PathChecker::validatePaths($target_paths);
       if (!is_bool($valid_path)) {
-        \Drupal::formBuilder()->setErrorByName('optimizely_path', $form_state,
+        $form_state->setErrorByName('optimizely_path',
           t('The project path "@project_path" is not a valid path. The path or alias' . 
             ' could not be resolved as a valid URL that will result in content on the site.', 
             array('@project_path' => $valid_path)));
@@ -231,7 +232,7 @@ class AddUpdateForm extends FormBase {
         PathChecker::uniquePaths($target_paths, $form_state['values']['optimizely_oid']);
 
       if (!is_bool($error_title)) {
-        \Drupal::formBuilder()->setErrorByName('optimizely_path', $form_state,
+        $form_state->setErrorByName('optimizely_path',
           t('The path "@error_path" will result in a duplicate entry based on' . 
             ' the other project path settings. Optimizely does not allow more' . 
             ' than one project to be run on a page.', 
@@ -245,7 +246,7 @@ class AddUpdateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
 
     // Catch form submitted values and prep for processing
     $oid = $form_state['values']['optimizely_oid'];
@@ -303,7 +304,7 @@ class AddUpdateForm extends FormBase {
     }
 
     // Return to project listing page
-    $form_state['redirect_route']['route_name'] = 'optimizely.listing';
+    $form_state->setRedirect('optimizely.listing');
   }
 
 }

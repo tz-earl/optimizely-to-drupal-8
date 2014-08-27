@@ -7,6 +7,8 @@
 
 namespace Drupal\optimizely;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
+
 
 /**
  * Implements the form for the Projects Listing.
@@ -26,7 +28,7 @@ class ProjectListForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
   
     $form = array();
     
@@ -187,7 +189,7 @@ class ProjectListForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     // Not used.
     return;
   }
@@ -196,7 +198,7 @@ class ProjectListForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     // Not used.
     return;
   }

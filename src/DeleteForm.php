@@ -8,6 +8,7 @@
 namespace Drupal\optimizely;
 
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 
@@ -35,18 +36,18 @@ class DeleteForm extends ConfirmFormBase {
     return $this->t('Delete');  // Default is 'Confirm'
   }
 
-  public function getCancelRoute() {
+  public function getCancelUrl() {
     return new Url('optimizely.listing');
   }
 
-  public function buildForm(array $form, array &$form_state, $oid = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $oid = NULL) {
 
     // Implement this method so we can record the project id for submitForm().
     $this->oid = $oid;
     return parent::buildForm($form, $form_state);
   }
 
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
 
     // Lookup entry details before delete
     $query = db_select('optimizely', 'o', array('target' => 'slave'))
@@ -73,7 +74,7 @@ class DeleteForm extends ConfirmFormBase {
     drupal_set_message(t('The project entry has been deleted.'), 'status');
 
     // Return to project listing page
-    $form_state['redirect_route']['route_name'] = 'optimizely.listing';
-
+    $form_state->setRedirect('optimizely.listing');
   }
+
 }
