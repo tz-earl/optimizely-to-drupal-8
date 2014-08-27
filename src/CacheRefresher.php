@@ -66,7 +66,8 @@ class CacheRefresher {
     }
 
     // Varnish
-    if (module_exists('varnish')) {
+    // if (module_exists('varnish')) {
+    if (\Drupal::moduleHandler()->moduleExists('varnish')) {
       varnish_expire_cache($path_array);
       drupal_set_message(t('Successfully purged cached page from Varnish.'));
     }
