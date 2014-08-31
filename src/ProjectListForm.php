@@ -73,36 +73,19 @@ class ProjectListForm extends FormBase {
       // Listing of target paths for the project entry
       $paths = unserialize($row->path);
       
-      $project_paths = '<ul>';
-      foreach ($paths as $path) {
-        // Deal with "<front>" as one of the paths
-        if ($path == '<front>') {
-          $config = \Drupal::config('system.site');
-          $front_path = $config->get('page.front');
-          $front_path .= ' <-> ';
+      // Modify the front page path, if present.
+      $front_idx = array_search('<front>', $paths);
+      if ($front_idx !== FALSE) {
+        $config = \Drupal::config('system.site');
+        $front_path = $config->get('page.front');
+        $front_path .= ' <-> ';
 
-          $path_alias = $this->lookupPathAlias($front_path);
-          $front_path .= $path_alias ? $path_alias : '';
+        $path_alias = $this->lookupPathAlias($front_path);
+        $front_path .= $path_alias ? $path_alias : '';
 
-          $path = htmlspecialchars('<front>') . ' (' . $front_path . ')';
-        }
-
-        $project_paths .= '<li>' . $path . '</li>';
+        $paths[$front_idx] = '<front>' . ' (' . $front_path . ')';
       }
-      $project_paths .= '</ul>';
 
-      // Build Edit / Delete links
-      if ($row->oid != 1) {
-        $edit_link = l(t('Update'), 'admin/config/system/optimizely/add_update/' . $row->oid);
-        $delete_link = ' / ' . l(t('Delete'), 'admin/config/system/optimizely/delete/' . $row->oid);
-        $default_entry_class = array('');
-      }
-      else {
-        $edit_link = l(t('Update'), 'admin/config/system/optimizely/add_update/' . $row->oid);
-        $delete_link = ' / ' . 'Default Entry';
-        $default_entry_class = array('default-entry');
-      }
-      
       // Build form elements including enable checkbox and data columns
       $form['projects'][$project_count]['enable'] = array(
         '#type' => 'checkbox',
@@ -118,15 +101,59 @@ class ProjectListForm extends FormBase {
       if ($row->enabled) {
         $form['projects'][$project_count]['enable']['#attributes']['checked'] = 'checked';
       }
-      
+
+      global $base_url;
+
+      // Build the Edit / Delete links
+      // The Default project may not be deleted.
+      if ($row->oid == 1) {
+        $render_links = array(
+            '#type' => 'inline_template',
+            '#template' => '<a href="{{ update_url }}">{{ update }}</a> / Default Entry',
+            '#context' => array('update' => t('Update'),
+                                'update_url' => $base_url .
+                                   '/admin/config/system/optimizely/add_update/' .
+                                   $row->oid,
+                            ),
+          );
+      }
+      else {
+        $render_links = array(
+            '#type' => 'inline_template',
+            '#template' => '<a href="{{ update_url }}">{{ update }}</a> / '.
+                           '<a href="{{ delete_url }}">{{ delete }}</a>',
+            '#context' => array('update' => t('Update'),
+                                'delete' => t('Delete'),
+                                'update_url' => $base_url .
+                                   '/admin/config/system/optimizely/add_update/' .
+                                   $row->oid,
+                                'delete_url' => $base_url .
+                                   '/admin/config/system/optimizely/delete/' .
+                                   $row->oid,
+                            ),
+          );
+      }
+
+      $render_paths = array(
+          '#type' => 'inline_template',
+          '#template' => '<ul>' .
+            '{% for p in paths %}<li>{{ p }}</li>{% endfor %}' .
+            '</ul>',
+          '#context' => array('paths' => $paths),
+        );
+
       $form['projects'][$project_count]['#project_title'] = $row->project_title;
-      $form['projects'][$project_count]['#admin_links'] = $edit_link . $delete_link;
-      $form['projects'][$project_count]['#paths'] = $project_paths;
+      $form['projects'][$project_count]['#admin_links'] = $render_links;
+      $form['projects'][$project_count]['#paths'] = $render_paths;
       
       if ($account_id == 0 && $row->oid == 1) {
-        $project_code = t('Set Optimizely ID in <strong>') .
-          l(t('Account Info'), 'admin/config/system/optimizely/settings') .
-          t('</strong> page to enable default project site wide.');
+        // Calling the t() function will cause the embedded html
+        // markup to be treated correctly as markup, not literal content.
+        $project_code = t('Set Optimizely ID in <strong><a href="@url">@acct_info</a>' .
+          '</strong> page to enable default project sitewide.',
+          array('@url' => url('admin/config/system/optimizely/settings'),
+                '@acct_info' => t('Account Info'),
+            ));
       }
       else {
         $project_code = $row->project_code;
