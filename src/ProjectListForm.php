@@ -102,18 +102,16 @@ class ProjectListForm extends FormBase {
         $form['projects'][$project_count]['enable']['#attributes']['checked'] = 'checked';
       }
 
-      global $base_url;
-
       // Build the Edit / Delete links
-      // The Default project may not be deleted.
+      // User may not delete the Default project.
       if ($row->oid == 1) {
         $render_links = array(
             '#type' => 'inline_template',
             '#template' => '<a href="{{ update_url }}">{{ update }}</a> / Default Entry',
             '#context' => array('update' => t('Update'),
-                                'update_url' => $base_url .
-                                   '/admin/config/system/optimizely/add_update/' .
-                                   $row->oid,
+                                'update_url' =>
+                                   url('/admin/config/system/optimizely/add_update/' .
+                                       $row->oid),
                             ),
           );
       }
@@ -124,12 +122,12 @@ class ProjectListForm extends FormBase {
                            '<a href="{{ delete_url }}">{{ delete }}</a>',
             '#context' => array('update' => t('Update'),
                                 'delete' => t('Delete'),
-                                'update_url' => $base_url .
-                                   '/admin/config/system/optimizely/add_update/' .
-                                   $row->oid,
-                                'delete_url' => $base_url .
-                                   '/admin/config/system/optimizely/delete/' .
-                                   $row->oid,
+                                'update_url' =>
+                                   url('/admin/config/system/optimizely/add_update/' .
+                                       $row->oid),
+                                'delete_url' =>
+                                   url('/admin/config/system/optimizely/delete/' .
+                                       $row->oid),
                             ),
           );
       }
@@ -150,10 +148,11 @@ class ProjectListForm extends FormBase {
         // Calling the t() function will cause the embedded html
         // markup to be treated correctly as markup, not literal content.
         $project_code = t('Set Optimizely ID in <strong><a href="@url">@acct_info</a>' .
-          '</strong> page to enable default project sitewide.',
-          array('@url' => url('admin/config/system/optimizely/settings'),
-                '@acct_info' => t('Account Info'),
-            ));
+              '</strong> page to enable default project sitewide.',
+              array('@url' => url('admin/config/system/optimizely/settings'),
+                    '@acct_info' => t('Account Info'),
+                )
+            );
       }
       else {
         $project_code = $row->project_code;

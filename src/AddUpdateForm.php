@@ -104,9 +104,11 @@ class AddUpdateForm extends FormBase {
       '#default_value' => String::checkPlain($project_code),
       '#description' => ($account_id == 0) ?
         $this->t('The Optimizely account value has not been set in the' . 
-          ' <a href="/admin/config/system/optimizely/settings">' . 
-          'Account Info</a> settings form. The Optimizely account value is used as' . 
-          ' the project ID for this "default" project entry.') :
+          ' <a href="@url">Account Info</a> settings form.' .
+          ' The Optimizely account value is used as' . 
+          ' the project ID for this "default" project entry.',
+          array('@url' => url('admin/config/system/optimizely/settings'))
+          ) :
         $this->t('The Optimizely javascript file name used in the snippet' . 
           ' as provided by the Optimizely website for the project.'),
       '#size' => 30,
@@ -170,8 +172,11 @@ class AddUpdateForm extends FormBase {
     if ($form_state['values']['optimizely_project_code'] == "Undefined") {
       $form_state->setErrorByName('optimizely_project_code',
         $this->t('The Optimizely Account ID must be set in the' . 
-                  ' <a href="/admin/config/system/optimizely/settings">Account Info</a>' . 
-                  ' page. The account ID is used as the default Optimizely Project Code.'));
+                  ' <a href="@url">Account Info</a> page.' .
+                  ' The account ID is used as the default Optimizely Project Code.',
+                  array('@url' => url('admin/config/system/optimizely/settings'))
+                )
+        );
     } // Validate that the project code entered is a number
     elseif (!ctype_digit($form_state['values']['optimizely_project_code'])) {
       $form_state->setErrorByName('optimizely_project_code',
