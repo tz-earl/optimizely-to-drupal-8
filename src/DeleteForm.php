@@ -49,6 +49,14 @@ class DeleteForm extends ConfirmFormBase {
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
+    // Prevent deletion of default project.
+    if ($this->oid == 1) {
+      drupal_set_message($this->t('Default project cannot be deleted.'), 'error');
+      // Return to project listing page
+      $form_state->setRedirect('optimizely.listing');
+      return;
+    }
+
     // Lookup entry details before delete
     $query = db_select('optimizely', 'o', array('target' => 'slave'))
       ->fields('o', array('path', 'enabled'))
