@@ -57,7 +57,8 @@ class AccountSettingsForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (!preg_match('/^\d+$/', $form_state['values']['optimizely_id'])) {
+    $oid = $form_state->getValue('optimizely_id');
+    if (!preg_match('/^\d+$/', $oid)) {
       $form_state->setErrorByName('optimizely_id',
                                   $this->t('Your Optimizely ID should be numeric.'));
     }
@@ -69,7 +70,7 @@ class AccountSettingsForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
     // Store the optimizely account id number.
-    $optimizely_id = $form_state['values']['optimizely_id'];
+    $optimizely_id = $form_state->getValue('optimizely_id');
     AccountId::setId($optimizely_id);
 
     // Update the default project / experiment entry with the account ID value
