@@ -47,7 +47,7 @@ class PathChecker {
       elseif (strpos($path, '*') !== FALSE) {
 
         $project_wildpath = substr($path, 0, -2);
-        if (!drupal_valid_path($project_wildpath, TRUE)) {
+        if (\Drupal::pathValidator()->isValid($project_wildpath) == FALSE) {
 
           // Look for entries in url_alias
           $query = db_query("SELECT * FROM {url_alias} WHERE
@@ -72,12 +72,12 @@ class PathChecker {
         // Look for entry in url_alias table
         if (self::lookupPathAlias($path) === FALSE &&
             self::lookupSystemPath($path) === FALSE &&
-            drupal_valid_path($project_parmpath, TRUE) === FALSE) {
+            \Drupal::pathValidator()->isValid($project_parmpath) == FALSE) {
           return $path;
         }
 
       } // Validation if path valid menu router entry, includes support for <front>
-      elseif (drupal_valid_path($path, TRUE) === FALSE) {
+      elseif (\Drupal::pathValidator()->isValid($path) == FALSE) {
 
         // Look for entry in url_alias table
         if (self::lookupPathAlias($path) === FALSE &&
