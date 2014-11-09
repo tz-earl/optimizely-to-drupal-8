@@ -45,7 +45,7 @@ function optimizely_help($route_name, $arg) {
         ' while not needing to remove the actual entry. The default entry can be' . 
         ' disabled when additional project entries are made with more specific' . '
          settings. This can include using the orginal Project Code.</p>',
-        array('@settings' => url('admin/config/system/optimizely/settings')));
+        array('@settings' => \Drupal::url('optimizely.settings')));
 
     case 'optimizely.listing':
       return t('<p>A listing of the Optimizely projects. Each entry can be' . 
@@ -73,23 +73,6 @@ function optimizely_help($route_name, $arg) {
         ' The account ID is essential to setting up the initial sitewide default' . 
         ' project entry.');
   }
-}
-
-
-/**
- * Implements hook_permission().
- *
- * Limit access to the module settings to accounts that have the "Administer Optimizely module" privilege.
- */
-function optimizely_permission() {
-  return array(
-    'administer optimizely' => array(
-      'title' => t('Administer Optimizely module'),
-      'description' => 
-        t('Administer access to everything in module'),
-      'restrict access' => TRUE,
-    ),
-  );
 }
 
 
