@@ -6,8 +6,10 @@
  */
 
 namespace Drupal\optimizely;
+
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 
 /**
@@ -42,7 +44,7 @@ class ProjectListForm extends FormBase {
     );
     
     $prefix  = '<ul class="admin-links"><li>';
-    $prefix .= l(t('Add Project Entry'), 'admin/config/system/optimizely/add_update');
+    $prefix .= \Drupal::l(t('Add Project Entry'), new Url('optimizely.add_update'));
     $prefix .= '</li></ul>';
 
     $header = array(t('Enabled'), t('Project Title'), t('Update / Delete'), 
@@ -110,8 +112,7 @@ class ProjectListForm extends FormBase {
             '#template' => '<a href="{{ update_url }}">{{ update }}</a> / Default Entry',
             '#context' => array('update' => t('Update'),
                                 'update_url' =>
-                                   url('/admin/config/system/optimizely/add_update/' .
-                                       $row->oid),
+                                   \Drupal::url('optimizely.add_update.oid', array('oid' => $row->oid)),
                             ),
           );
       }
@@ -123,11 +124,9 @@ class ProjectListForm extends FormBase {
             '#context' => array('update' => t('Update'),
                                 'delete' => t('Delete'),
                                 'update_url' =>
-                                   url('/admin/config/system/optimizely/add_update/' .
-                                       $row->oid),
+                                   \Drupal::url('optimizely.add_update.oid', array('oid' => $row->oid)),
                                 'delete_url' =>
-                                   url('/admin/config/system/optimizely/delete/' .
-                                       $row->oid),
+                                   \Drupal::url('optimizely.delete.oid', array('oid' => $row->oid)),
                             ),
           );
       }
@@ -149,7 +148,7 @@ class ProjectListForm extends FormBase {
         // markup to be treated correctly as markup, not literal content.
         $project_code = t('Set Optimizely ID in <strong><a href="@url">@acct_info</a>' .
               '</strong> page to enable default project sitewide.',
-              array('@url' => url('admin/config/system/optimizely/settings'),
+              array('@url' => \Drupal::url('optimizely.settings'),
                     '@acct_info' => t('Account Info'),
                 )
             );

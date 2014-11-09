@@ -129,14 +129,11 @@ function optimizely_install() {
     // Acount ID and access permisisons need to be configured
     if ($default_entry_created == TRUE) {
       drupal_set_message(t('A default project / experiment entry has been created.' . 
-        ' Next, enter your <a href="@url_1">Optimizely account ID</a>.' .
-        ' There is also an <a href="@url_2">optimizely permission</a>' .
-        ' that can be set for specific roles to access the adminstration functionality.',
-        array('@url_1' => url('/admin/config/system/optimizely/settings'),
-              '@url_2' => url('/admin/people/permissions') . '#module-optimizely')),
-      'status');
-      // For @url_2 the pound sign # must be appended outside of the call to url().
-      // Otherwise it will be translated to %23 which results in an invalid url.
+        " Next, enter your Optimizely account ID on the module's ACCOUNT INFO page." .
+        ' There is also an Optimizely permission that can be set for specific roles' .
+        ' to access the adminstration functionality.' .
+        " You can access those pages via the Optimizely module below."),
+        'status');
     }
     else {
       drupal_set_message(t('An error was encountered while adding the default project entry' . 

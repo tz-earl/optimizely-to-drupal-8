@@ -10,6 +10,7 @@ namespace Drupal\optimizely;
 use Drupal\Core\Form\FormBase;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 
 /**
@@ -107,7 +108,7 @@ class AddUpdateForm extends FormBase {
           ' <a href="@url">Account Info</a> settings form.' .
           ' The Optimizely account value is used as' . 
           ' the project ID for this "default" project entry.',
-          array('@url' => url('admin/config/system/optimizely/settings'))
+          array('@url' => \Drupal::url('optimizely.settings'))
           ) :
         $this->t('The Optimizely javascript file name used in the snippet' . 
           ' as provided by the Optimizely website for the project.'),
@@ -152,7 +153,7 @@ class AddUpdateForm extends FormBase {
     );
     
     $addupdate_form['cancel'] = array(
-      '#markup' => l(t('Cancel'), 'admin/config/system/optimizely'),
+      '#markup' => \Drupal::l(t('Cancel'), new Url('optimizely.settings')),
       '#weight' => 101,
     );
 
@@ -177,7 +178,7 @@ class AddUpdateForm extends FormBase {
         $this->t('The Optimizely Account ID must be set in the' . 
                   ' <a href="@url">Account Info</a> page.' .
                   ' The account ID is used as the default Optimizely Project Code.',
-                  array('@url' => url('admin/config/system/optimizely/settings'))
+                  array('@url' => \Drupal::url('optimizely.settings'))
                 )
         );
     } // Validate that the project code entered is a number
