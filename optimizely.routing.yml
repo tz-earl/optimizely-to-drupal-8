@@ -17,7 +17,7 @@ optimizely.add_update:
 optimizely.add_update.oid:
   path: /admin/config/system/optimizely/add_update/{oid}
   defaults:
-    _content: \Drupal\optimizely\DoUpdate::buildUpdateForm
+    _controller: \Drupal\optimizely\DoUpdate::buildUpdateForm
     _title: Optimizely Edit Project
   requirements:
     _permission: administer optimizely
