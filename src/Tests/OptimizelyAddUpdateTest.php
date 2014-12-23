@@ -108,7 +108,7 @@ class OptimizelyAddUpdateTest extends WebTestBase {
         ->fetchField();
 
     $this->assertEqual($project_title, $edit['optimizely_project_title'], 
-                        t('The project was added to the database.'), 'Optimizely');
+                        t('<strong>The project was added to the database.</strong>'), 'Optimizely');
 
     //----- create page  
     $settings_2 = array(
@@ -145,7 +145,7 @@ class OptimizelyAddUpdateTest extends WebTestBase {
         ->fetchField();
 
     $this->assertEqual($project_title, $edit_2['optimizely_project_title'], 
-                        t('The project was updated in the database.'), 'Optimizely');
+                        t('<strong>The project was updated in the database.</strong>'), 'Optimizely');
   }
 
 }

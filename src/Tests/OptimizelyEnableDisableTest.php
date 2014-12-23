@@ -99,7 +99,7 @@ class OptimizelyEnableDisableTest extends WebTestBase {
     // test if project was enabled
     $enabled = db_query('SELECT enabled FROM {optimizely} WHERE oid = 2')->fetchField();
     $this->assertEqual($enabled, $edit_2['optimizely_enabled'], 
-                        t('The project was enabled from update page.'), 'Optimizely');
+                        t('<strong>The project was enabled from update page.</strong>'), 'Optimizely');
     
     $edit_3 = array(    
       'optimizely_enabled' => 0,
@@ -109,7 +109,7 @@ class OptimizelyEnableDisableTest extends WebTestBase {
     // test if project was disabled
     $enabled = db_query('SELECT enabled FROM {optimizely} WHERE oid = 2')->fetchField();
     $this->assertEqual($enabled, $edit_3['optimizely_enabled'], 
-                        t('The project was disabled from update page.'),'Optimizely');
+                        t('<strong>The project was disabled from update page.</strong>'),'Optimizely');
 
   }
 

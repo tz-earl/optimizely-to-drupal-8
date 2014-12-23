@@ -82,7 +82,7 @@ class OptimizelyAccessTest extends WebTestBase {
   public function testOptimizelyPermission() {
 
     $valid = $this->checkPermissions(array('name' => $this->optimizelyPermission));
-    $this->assertTrue($valid, t(" '@perm' is a valid permission.", 
+    $this->assertTrue($valid, t("<strong> '@perm' is a valid permission.</strong>", 
                                 array('@perm' => $this->optimizelyPermission)),
                                 'Optimizely');
   }
@@ -109,32 +109,32 @@ class OptimizelyAccessTest extends WebTestBase {
 
     $this->drupalGet($this->listingPage);
     $this->assertResponse($access_forbidden, 
-      "User without $this->optimizelyPermission permission <strong>may not</strong>" . 
-      " access project listing page -> $this->listingPage",
+      "<strong>User without $this->optimizelyPermission permission may not" . 
+      " access project listing page -> $this->listingPage </strong>",
       'Optimizely');
 
     $this->drupalGet($this->addUpdatePage);
     $this->assertResponse($access_forbidden, 
-      "User without $this->optimizelyPermission permission <strong>may not</strong>" . 
-      " access project add/update page -> $this->addUpdatePage",
+      "<strong>User without $this->optimizelyPermission permission may not" . 
+      " access project add/update page -> $this->addUpdatePage </strong>",
       'Optimizely');
 
     $this->drupalGet($this->deletePage);
     $this->assertResponse($access_forbidden, 
-      "User without $this->optimizelyPermission permission <strong>may not</strong>" . 
-      " access project delete page -> $this->deletePage",
+      "<strong>User without $this->optimizelyPermission permission may not" . 
+      " access project delete page -> $this->deletePage </strong>",
       'Optimizely');
 
     $this->drupalGet($this->settingsPage);
     $this->assertResponse($access_forbidden, 
-      "User without $this->optimizelyPermission permission <strong>may not</strong>" . 
-      " access project settings page -> $this->settingsPage",
+      "<strong>User without $this->optimizelyPermission permission may not" . 
+      " access project settings page -> $this->settingsPage </strong>",
       'Optimizely');
 
     $this->drupalGet($this->ajaxCallbackPage);
     $this->assertResponse($access_forbidden, 
-      "User without $this->optimizelyPermission permission <strong>may not</strong>" . 
-      " access AJAX callback URL -> $this->ajaxCallbackPage",
+      "<strong>User without $this->optimizelyPermission permission may not" . 
+      " access AJAX callback URL -> $this->ajaxCallbackPage </strong>",
       'Optimizely');
     
     $this->drupalLogout();
@@ -152,26 +152,26 @@ class OptimizelyAccessTest extends WebTestBase {
     
     $this->drupalGet($this->listingPage);
     $this->assertResponse($access_ok, 
-      "User with $this->optimizelyPermission permission <strong>may</strong>" . 
-      " access project listing page -> $this->listingPage",
+      "<strong>User with $this->optimizelyPermission permission may" . 
+      " access project listing page -> $this->listingPage </strong>",
       'Optimizely');
 
     $this->drupalGet($this->addUpdatePage);
     $this->assertResponse($access_ok, 
-      "User with $this->optimizelyPermission permission <strong>may</strong>" . 
-      " access project add/update page -> $this->addUpdatePage",
+      "<strong>User with $this->optimizelyPermission permission may" . 
+      " access project add/update page -> $this->addUpdatePage </strong>",
       'Optimizely');
 
     $this->drupalGet($this->deletePage);
     $this->assertResponse($access_ok, 
-      "User with $this->optimizelyPermission permission <strong>may</strong>" . 
-      " access project delete page -> $this->deletePage",
+      "<strong>User with $this->optimizelyPermission permission may" . 
+      " access project delete page -> $this->deletePage </strong>",
       'Optimizely');
 
     $this->drupalGet($this->settingsPage);
     $this->assertResponse($access_ok, 
-      "User with $this->optimizelyPermission permission <strong>may</strong>" . 
-      " access project settings page -> $this->settingsPage",
+      "<strong>User with $this->optimizelyPermission permission may" . 
+      " access project settings page -> $this->settingsPage </strong>",
       'Optimizely');
     
     $this->drupalLogout();

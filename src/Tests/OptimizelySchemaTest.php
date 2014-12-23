@@ -50,6 +50,6 @@ class OptimizelySchemaTest extends WebTestBase {
     $this->drupalLogin($this->privilegedUser);
 
     $schema = module_invoke('optimizely', 'schema');
-    $this->assertNotNull($schema, t('Optimizely table was created.'), 'Optimizely');
+    $this->assertNotNull($schema, t('<strong>Optimizely table was created.</strong>'), 'Optimizely');
   }
 }
