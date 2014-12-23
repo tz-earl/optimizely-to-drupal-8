@@ -35,13 +35,8 @@ class ProjectListForm extends FormBase {
     $form = array();
     
     // Load css and js files specific to optimizely admin pages
-    $form['#attached']['css'] = array(
-      drupal_get_path('module', 'optimizely') . '/css/optimizely.css',
-    );
-
-    $form['#attached']['js'] = array(
-      drupal_get_path('module', 'optimizely') . '/js/optimizely-admin.js',
-    );
+    $form['#attached']['library'][] = 'optimizely/optimizely.forms';
+    $form['#attached']['library'][] = 'optimizely/optimizely.enable';
     
     $prefix  = '<ul class="admin-links"><li>';
     $prefix .= \Drupal::l(t('Add Project Entry'), new Url('optimizely.add_update'));

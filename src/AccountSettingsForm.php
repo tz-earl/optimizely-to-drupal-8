@@ -26,12 +26,7 @@ class AccountSettingsForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $settings_form['#theme'] = 'optimizely_account_settings_form';
-    $settings_form['#attached'] = array('css' => array
-      (
-        'type' => 'file',
-        'data' => drupal_get_path('module', 'optimizely') . '/css/optimizely.css',
-      ),
-    );
+    $form['#attached']['library'][] = 'optimizely/optimizely.forms';
 
     $settings_form['optimizely_id'] = array(
       '#type' => 'textfield',

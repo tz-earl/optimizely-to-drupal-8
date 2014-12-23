@@ -34,12 +34,7 @@ class AddUpdateForm extends FormBase {
 
     $addupdate_form = array();
     $addupdate_form['#theme'] = 'optimizely_add_update_form';
-    $addupdate_form['#attached'] = array(
-        'css' => array(
-        'type' => 'file',
-        'data' => drupal_get_path('module', 'optimizely') . '/css/optimizely.css',
-      ),
-    );
+    $form['#attached']['library'][] = 'optimizely/optimizely.forms';
 
     if ($target_oid == NULL) {
 
@@ -252,7 +247,6 @@ class AddUpdateForm extends FormBase {
             array('@error_path' => $error_path)));
       }   
     }
-
   }
 
 
