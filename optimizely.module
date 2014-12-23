@@ -202,9 +202,7 @@ function optimizely_page_build(&$page) {
     $project_paths = implode("\n", array_unique($project_paths));
 
     if (\Drupal::service('path.matcher')->matchPath($current_path, $project_paths) ||
-        \Drupal::service('path.matcher')->matchPath($current_path_alias, $project_paths))
-     {
-)
+        \Drupal::service('path.matcher')->matchPath($current_path_alias, $project_paths)) {
       $add_snippet = TRUE;
       break;
     }
