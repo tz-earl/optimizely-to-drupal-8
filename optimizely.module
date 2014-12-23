@@ -201,8 +201,10 @@ function optimizely_page_build(&$page) {
     // Prep for drupal_match_path()
     $project_paths = implode("\n", array_unique($project_paths));
 
-    if (drupal_match_path($current_path, $project_paths) ||
-        drupal_match_path($current_path_alias, $project_paths)) {
+    if (\Drupal::service('path.matcher')->matchPath($current_path, $project_paths) ||
+        \Drupal::service('path.matcher')->matchPath($current_path_alias, $project_paths))
+     {
+)
       $add_snippet = TRUE;
       break;
     }
@@ -220,12 +222,7 @@ function optimizely_page_build(&$page) {
                                     'type' => 'external',
                                     'data' => $snippet_url,
                                   );
-
-    // $proj = $project['project_code'];  //*** For testing
-    // drupal_set_message("Optimizely snippet added to this page for $proj", 'status');  //*** For testing
-
   }
-
 }
 
 /**

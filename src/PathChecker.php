@@ -190,8 +190,8 @@ class PathChecker {
         }
 
         // Look for duplicates
-        if (drupal_match_path($target_path, $all_project_paths_string)) {
-            return array($project->project_title, $target_path);
+        if (\Drupal::service('path.matcher')->matchPath($target_path, $all_project_paths_string)) {
+          return array($project->project_title, $target_path);
         }
 
       }
