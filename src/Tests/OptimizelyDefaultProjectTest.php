@@ -10,7 +10,7 @@ namespace Drupal\optimizely\Tests;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Test that:
+ * Test various aspects of the default project.
  *
  * 1. The default project is available but disabled in the project listing page
  *    after the module has been enabled.

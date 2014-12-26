@@ -232,7 +232,7 @@ class OptimizelyPageSnippetTest extends WebTestBase {
     // Test that Project 2 was enabled
     $this->drupalGet($this->listingPage);
     $this->assertRaw('name="project-2" checked="checked"', 
-      '<strong>Project 2 is enabled</strong>, ready to test path settings for presence of snippet.',
+      '<strong>Project 2 is enabled, ready to test path settings for presence of snippet.</strong>',
       'Optimizely');
     
     $this->drupalLogout();

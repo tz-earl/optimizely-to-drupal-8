@@ -95,20 +95,20 @@ class OptimizelyAliasIncludeSnippetTest extends WebTestBase {
     
     // check if snippet does appears on project path pages thru alias
     $this->drupalGet("node/" . $node1->id());
-    $this->assertRaw($snippet, 'Snippet found in markup of project path page', 
+    $this->assertRaw($snippet, '<strong>Snippet found in markup of project path page</strong>', 
                       'Optimizely');
 
     $this->drupalGet("node/" . $node2->id());
-    $this->assertRaw($snippet, 'Snippet found in markup of project path page', 
+    $this->assertRaw($snippet, '<strong>Snippet found in markup of project path page</strong>', 
                       'Optimizely');
 
     // check if snippet does not appear on other non-project pages
     $this->drupalGet("node/" . $node3->id());
-    $this->assertNoRaw($snippet, 'Snippet not found in markup of other page',
+    $this->assertNoRaw($snippet, '<strong>Snippet not found in markup of other page</strong>',
                       'Optimizely');
   
     $this->drupalGet("node/" . $node4->id());
-    $this->assertNoRaw($snippet, 'Snippet not found in markup of other page',
+    $this->assertNoRaw($snippet, '<strong>Snippet not found in markup of other page</strong>',
                       'Optimizely');
 
   }
