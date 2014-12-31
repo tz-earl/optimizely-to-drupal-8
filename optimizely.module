@@ -75,7 +75,6 @@ function optimizely_help($route_name, $arg) {
   }
 }
 
-
 /**
  * Implements hook_theme().
  *
@@ -84,6 +83,7 @@ function optimizely_help($route_name, $arg) {
  * by the site theme by copying these template files into theme directory.
  */
 function optimizely_theme($existing, $type, $theme, $path) {
+
   return array(
     'optimizely_account_settings_form' => array(
       'render element' => 'form',
@@ -102,12 +102,20 @@ function optimizely_theme($existing, $type, $theme, $path) {
  * Checks each page that is about to be rendered as to
  * whether to insert a snippet of Optimizely code or not.
  */
-function optimizely_page_build(&$page) {
+function optimizely_page_attachments(array &$page) {
 
-  $current_path = current_path();
+  $url = \Drupal\Core\Url::fromRoute('<current>');
+  $current_path = $url->toString();
+
+  // For the route <current>, Url::fromRoute() passes back a path
+  // with a leading slash. Strip off the slash so as to be
+  // compatible with the D7 projects.
+  if ($current_path[0] == '/') {
+    $current_path = ltrim($current_path, '/');
+  }
+
   $current_path_alias = _lookup_path_alias($current_path);
 
-  $wildcard_match = FALSE;
   $add_snippet = FALSE;
 
   // Load all entries in the optimizely table
@@ -132,7 +140,6 @@ function optimizely_page_build(&$page) {
     if (!$project['enabled']) {
       continue;
     }
-
 
     // Target paths from database for project and get real path for <front> if a part of target paths for project
     $project_paths = unserialize($project['path']);
@@ -185,7 +192,7 @@ function optimizely_page_build(&$page) {
       }
 
       // Build out $project_paths with possible source and alias values to
-      // test with drupal_match_path()
+      // check for path matching.
       $proj_path_source = _lookup_system_path($proj_path);
       if ($proj_path_source) {
          $project_paths[] = $proj_path_source;
@@ -198,7 +205,7 @@ function optimizely_page_build(&$page) {
 
     }
 
-    // Prep for drupal_match_path()
+    // Prep for path matching.
     $project_paths = implode("\n", array_unique($project_paths));
 
     if (\Drupal::service('path.matcher')->matchPath($current_path, $project_paths) ||
@@ -216,10 +223,17 @@ function optimizely_page_build(&$page) {
 
     // Add javascript call to page markup
     $snippet_url = $protocol . '://cdn.optimizely.com/js/' . $project['project_code'] . '.js';
-    $page['#attached']['js'][] = array(
-                                    'type' => 'external',
-                                    'data' => $snippet_url,
-                                  );
+    $page['#attached']['html_head'][] = array(
+      array(
+        '#tag' => 'script',
+        '#attributes' => array(
+          'type' => 'text/javascript',
+          'src' => $snippet_url,
+        ),
+        '#value' => '',
+      ),
+      'optimizely-snippet',
+    );
   }
 }
 
