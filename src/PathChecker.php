@@ -100,7 +100,7 @@ class PathChecker {
    *   $target_paths - the paths entered for a new project entry, OR
    *   the paths of an existing project entry that has been enabled.
    * @parm
-   *   $target_paths = NULL : the oid of the project entry that has been enabled
+   *   $target_oid = NULL : the oid of the project entry that has been enabled
    *
    * @return
    *   $target_path: the path that is a duplicate that must be addressed to
@@ -122,7 +122,7 @@ class PathChecker {
         ->fields('o', array('oid', 'project_title', 'path'))
         ->condition('o.enabled', 1, '=');
 
-      // Add target_oid to query when it's an update, $target_oid is will be defined
+      // Add target_oid to query when it's an update, $target_oid is defined
       if ($target_oid != NULL) {
         $query = $query->condition('o.oid', $target_oid, '<>');
       }
