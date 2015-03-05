@@ -13,7 +13,7 @@ class AccountId {
   private static function getConfig() {
 
     if (! self::$config) {
-      self::$config = \Drupal::config('optimizely.settings');
+      self::$config = \Drupal::configFactory()->getEditable('optimizely.settings');
     }
     return self::$config;
   }
