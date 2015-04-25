@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Test enabling / disabling non-default project from update page
+ *
+ * @group Optimizely
  */
 class OptimizelyEnableDisableTest extends WebTestBase {  
 

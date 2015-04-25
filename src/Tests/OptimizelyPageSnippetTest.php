@@ -13,6 +13,8 @@ use Drupal\Core\Language\LanguageInterface;
 
 /**
  * Tests that the javascript snippet is included on a variety of paths.
+ *
+ * @group Optimizely
  */
 class OptimizelyPageSnippetTest extends WebTestBase {
 

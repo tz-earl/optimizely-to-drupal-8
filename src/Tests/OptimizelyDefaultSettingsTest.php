@@ -11,6 +11,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Test the account Id and the Default project.
+ *
+ * @group Optimizely
  */
 class OptimizelyDefaultSettingsTest extends WebTestBase {
 

@@ -31,6 +31,8 @@ use Drupal\simpletest\WebTestBase;
  *
  * 6. Enabling the default project with the default path setting of sidewide "*"
  *    should result in the snippet being displayed on the site's front page.
+ *
+ * @group Optimizely
  */
 class OptimizelyDefaultProjectTest extends WebTestBase {
 

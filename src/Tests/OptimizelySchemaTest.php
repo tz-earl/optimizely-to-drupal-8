@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Test schema creation.
+ *
+ * @group Optimizely
  */
 class OptimizelySchemaTest extends WebTestBase {
 
@@ -49,7 +51,7 @@ class OptimizelySchemaTest extends WebTestBase {
   {
     $this->drupalLogin($this->privilegedUser);
 
-    $schema = module_invoke('optimizely', 'schema');
+    $schema = \Drupal::moduleHandler()->invoke('optimizely', 'schema');
     $this->assertNotNull($schema, t('<strong>Optimizely table was created.</strong>'), 'Optimizely');
   }
 }

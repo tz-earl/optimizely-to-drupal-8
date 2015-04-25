@@ -12,7 +12,8 @@ use Drupal\simpletest\WebTestBase;
 
 /**
  * Test adding a project with a path that is an alias.
- * 
+ *
+ * @group Optimizely
  */
 class OptimizelyAddUpdateTest extends WebTestBase {
 

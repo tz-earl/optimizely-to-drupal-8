@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Tests that the javascript snippet is included on project pages
  * and not included on non-project pages.
+ *
+ * @group Optimizely
  */
 class OptimizelyIncludeSnippetTest extends WebTestBase {
 

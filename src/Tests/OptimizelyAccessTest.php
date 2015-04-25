@@ -12,6 +12,8 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Create users with no, some, and optimizely permissions
  * to test access to module related pages.
+ *
+ * @group Optimizely
  */
 class OptimizelyAccessTest extends WebTestBase {
 
