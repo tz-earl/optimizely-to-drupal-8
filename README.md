@@ -7,8 +7,6 @@ Updated to Drupal 8.0.0-alpha15.<br />
 Updated to Drupal 8.0.0-beta1.<br />
 Tested for Drupal 8.0.0-beta3. No code changes.<br />
 Updated for Drupal 8.0.0-beta4.<br />
-Updated to Drupal 8.0.0-beta5.<br />
 Updated to Drupal 8.0.0-beta6.<br />
-Updated to Drupal 8.0.0-beta5.<br />
 Updated to Drupal 8.0.0-beta9.<br />
-Updated to Drupal 8.0.0-beta10.<br />
+Tested for Drupal 8.0.0-beta10. No code changes.<br />
