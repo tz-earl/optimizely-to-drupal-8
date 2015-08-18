@@ -107,13 +107,6 @@ function optimizely_page_attachments(array &$page) {
   $url = \Drupal\Core\Url::fromRoute('<current>');
   $current_path = $url->toString();
 
-  // For the route <current>, Url::fromRoute() passes back a path
-  // with a leading slash. Strip off the slash so as to be
-  // compatible with the D7 projects.
-  if ($current_path[0] == '/') {
-    $current_path = ltrim($current_path, '/');
-  }
-
   $current_path_alias = _lookup_path_alias($current_path);
 
   $add_snippet = FALSE;
@@ -238,17 +231,24 @@ function optimizely_page_attachments(array &$page) {
 }
 
 /**
- * These two functions are redundant with trait LookupPath,
+ * These three functions are redundant with trait LookupPath,
  * but I haven't been able to re-use the trait in this .module file.
  */
 function _lookup_path_alias($path) {
 
+  $path = _check_path($path);
   $alias = \Drupal::service('path.alias_manager')->getAliasByPath($path);
   return (strcmp($alias, $path) == 0) ? FALSE : $alias;
 }
 
 function _lookup_system_path($alias) {
 
+  $alias = _check_path($alias);
   $path = \Drupal::service('path.alias_manager')->getPathByAlias($alias);
   return (strcmp($path, $alias) == 0) ? FALSE : $path;
+}
+
+function _check_path($path) {
+
+  return ($path[0] == '/') ? $path : '/' . $path;
 }
