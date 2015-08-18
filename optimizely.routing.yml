@@ -1,6 +1,6 @@
 optimizely.listing:
   path: /admin/config/system/optimizely
-  defaults: 
+  defaults:
     _form: \Drupal\optimizely\ProjectListForm
     _title: Optimizely
   requirements:
@@ -8,7 +8,7 @@ optimizely.listing:
 
 optimizely.add_update:
   path: /admin/config/system/optimizely/add_update
-  defaults: 
+  defaults:
     _form: \Drupal\optimizely\AddUpdateForm
     _title: Optimizely
   requirements:
@@ -32,7 +32,7 @@ optimizely.delete.oid:
 
 optimizely.settings:
   path: /admin/config/system/optimizely/settings
-  defaults: 
+  defaults:
     _form: \Drupal\optimizely\AccountSettingsForm
     _title: Optimizely
   requirements:
@@ -45,4 +45,3 @@ ajax.enable:
     _title: Optimizely Administer AJAX
   requirements:
     _permission: administer optimizely
-    _format: json
