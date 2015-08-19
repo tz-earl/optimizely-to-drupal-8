@@ -134,8 +134,8 @@ class OptimizelyAliasIncludeSnippetTest extends WebTestBase {
   private function makePageAlias($node) {
     
     $edit_node = array();
-    $edit_node['source'] = 'node/' . $node->id();
-    $edit_node['alias'] = $this->randomMachineName(10);
+    $edit_node['source'] = '/node/' . $node->id();
+    $edit_node['alias'] = '/' . $this->randomMachineName(10);
     $this->drupalPostForm($this->addAliasPage, $edit_node, t('Save')); 
     // @todo create alias in 'node/add/page'
 

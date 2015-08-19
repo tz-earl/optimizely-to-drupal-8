@@ -90,8 +90,8 @@ class OptimizelyAddUpdateTest extends WebTestBase {
 
     // Create the url alias
     $edit_node1 = array();
-    $edit_node1['source'] = 'node/' . $node1->id();
-    $edit_node1['alias'] = $this->randomMachineName(10);
+    $edit_node1['source'] = '/node/' . $node1->id();
+    $edit_node1['alias'] = '/' . $this->randomMachineName(10);
     $this->drupalPostForm($this->addAliasPage, $edit_node1, t('Save'));
 
     // Add a project with a path to the alias.
@@ -126,8 +126,8 @@ class OptimizelyAddUpdateTest extends WebTestBase {
 
     // Create another url alias
     $edit_node2 = array();
-    $edit_node2['source'] = 'node/' . $node2->id();
-    $edit_node2['alias'] = $this->randomMachineName(10);
+    $edit_node2['source'] = '/node/' . $node2->id();
+    $edit_node2['alias'] = '/' . $this->randomMachineName(10);
     $this->drupalPostForm($this->addAliasPage, $edit_node2, t('Save'));
 
     // Update the existing project with the other alias.

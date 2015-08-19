@@ -15,7 +15,7 @@ use Drupal\simpletest\WebTestBase;
  *
  * @group Optimizely
  */
-class OptimizelyEnableDisableTest extends WebTestBase {  
+class OptimizelyEnableDisableTest extends WebTestBase {
 
   protected $addUpdatePage = 'admin/config/system/optimizely/add_update';
   protected $update2Page = 'admin/config/system/optimizely/add_update/2';
@@ -65,7 +65,7 @@ class OptimizelyEnableDisableTest extends WebTestBase {
 
     $this->drupalLogin($this->privilegedUser);
 
-    //----- create page  
+    //----- create page
     $settings = array(
       'type' => 'page',
       'title' => $this->randomMachineName(32),
@@ -77,11 +77,12 @@ class OptimizelyEnableDisableTest extends WebTestBase {
                 ),
     );
     $node = $this->drupalCreateNode($settings);
-    
+
     // Create the url alias
+    // N.B. The source and alias paths MUST start with a leading slash.
     $edit_node = array();
-    $edit_node['source'] = 'node/' . $node->id();
-    $edit_node['alias'] = $this->randomMachineName(10);
+    $edit_node['source'] = '/node/' . $node->id();
+    $edit_node['alias'] = '/' . $this->randomMachineName(10);
     $this->drupalPostForm($this->addAliasPage, $edit_node, t('Save'));
 
     // Add a project with a path to the alias.
@@ -92,25 +93,25 @@ class OptimizelyEnableDisableTest extends WebTestBase {
       'optimizely_enabled' => 0,
     );
     $this->drupalPostForm($this->addUpdatePage, $edit, t('Add'));
-    
-    $edit_2 = array(    
+
+    $edit_2 = array(
       'optimizely_enabled' => 1,
     );
     $this->drupalPostForm($this->update2Page, $edit_2, t('Update'));
-    
+
     // test if project was enabled
     $enabled = db_query('SELECT enabled FROM {optimizely} WHERE oid = 2')->fetchField();
-    $this->assertEqual($enabled, $edit_2['optimizely_enabled'], 
+    $this->assertEqual($enabled, $edit_2['optimizely_enabled'],
                         t('<strong>The project was enabled from update page.</strong>'), 'Optimizely');
-    
-    $edit_3 = array(    
+
+    $edit_3 = array(
       'optimizely_enabled' => 0,
     );
     $this->drupalPostForm($this->update2Page, $edit_3, t('Update'));
-    
+
     // test if project was disabled
     $enabled = db_query('SELECT enabled FROM {optimizely} WHERE oid = 2')->fetchField();
-    $this->assertEqual($enabled, $edit_3['optimizely_enabled'], 
+    $this->assertEqual($enabled, $edit_3['optimizely_enabled'],
                         t('<strong>The project was disabled from update page.</strong>'),'Optimizely');
 
   }

@@ -136,18 +136,18 @@ class OptimizelyPageSnippetTest extends WebTestBase {
 
         $random_alias_node = mt_rand(0, 1);
         if ($random_alias_node) {
-          $alias = $this->randomMachineName(10);
+          $alias = '/' . $this->randomMachineName(10);
   
           // Random subpath alias
           $random_subalias_node = mt_rand(0, 1);
           if ($random_subalias_node) {
-            $subpath = $this->randomMachineName(10);
-            $alias = $subpath . '/' . $alias;
+            $subpath = '/' . $this->randomMachineName(10);
+            $alias = $subpath . $alias;
           }
-          
+
           // Create the url alias
           $edit_node = array();
-          $edit_node['source'] = 'node/' . $node->id();
+          $edit_node['source'] = '/node/' . $node->id();
           $edit_node['alias'] = $alias;
           $this->drupalPostForm($this->addAliasPage, $edit_node, t('Save'));
       
@@ -184,10 +184,10 @@ class OptimizelyPageSnippetTest extends WebTestBase {
         else {
           if (!empty($this->projectPaths[$project_count])) {
               $this->projectPaths[$project_count] = 
-                'node/' . $node->id() . "\n" . $this->projectPaths[$project_count];
+                '/node/' . $node->id() . "\n" . $this->projectPaths[$project_count];
           }
           else {
-            $this->projectPaths[$project_count] = 'node/' . $node->id();
+            $this->projectPaths[$project_count] = '/node/' . $node->id();
           }
           
         }

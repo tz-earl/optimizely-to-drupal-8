@@ -72,7 +72,7 @@ class OptimizelyIncludeSnippetTest extends WebTestBase {
     $edit = array(
       'optimizely_project_title' => $this->randomMachineName(8),
       'optimizely_project_code' => rand(0,10000),
-      'optimizely_path' => "node/" . $node1->id() . "\n" . "node/" . $node2->id(),
+      'optimizely_path' => "/node/" . $node1->id() . "\n" . "/node/" . $node2->id(),
       'optimizely_enabled' => 1,
     );
     
