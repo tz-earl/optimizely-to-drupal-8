@@ -12,4 +12,4 @@ Updated to Drupal 8.0.0-beta9.<br />
 Tested for Drupal 8.0.0-beta10. No code changes.<br />
 Updated to Drupal 8.0.0-beta11.<br />
 Updated to Drupal 8.0.0-beta12.<br />
-Updated to Drupal 8.0.0-beta14.<br />
+Tested for Drupal 8.0.0-beta14. No code changes.<br />
