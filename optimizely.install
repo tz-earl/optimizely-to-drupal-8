@@ -139,9 +139,12 @@ function optimizely_install() {
       drupal_set_message(t('An error was encountered while adding the default project entry' . 
         ' for the Optimizely module.'), 'error');
     }
-
   }
 
+  // Set the default value for the language code to be English.
+  $config = \Drupal::configFactory()->getEditable('optimizely.settings');
+  $config->set('langcode', 'en');
+  $config->save();
 }
 
 /**
@@ -151,19 +154,14 @@ function optimizely_install() {
  */
 function optimizely_uninstall() {
 
-  // Remove all optimizely settings.
-  $cleanup_status = Drupal\optimizely\AccountId::deleteId();
+  // Remove all values from optimizely.settings.
+  $config = \Drupal::configFactory()->getEditable('optimizely.settings');
+  $config->delete();
 
-  if ($cleanup_status == TRUE) {
-    drupal_set_message(t('Optimizely variables deleted.'), 'status');
-  }
-  else {
-    drupal_set_message(t('No entries found when deleting Optimizely variables.'), 'warning');
-  }
+  drupal_set_message(t('Optimizely variables deleted.'), 'status');
 
   // hook_uninstall removes schema automatically
   drupal_set_message(t('Optimizely database table dropped.'), 'status');
-
 }
 
 /**
