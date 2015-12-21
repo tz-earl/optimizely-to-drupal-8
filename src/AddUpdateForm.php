@@ -81,8 +81,8 @@ class AddUpdateForm extends FormBase {
       '#type' => 'textfield',
       '#disabled' => $target_oid == 1 ? TRUE : FALSE,
       '#title' => $this->t('Project Title'),
-      '#default_value' => $target_oid ? SafeMarkup::checkPlain($record->project_title) : '',
-      '#description' => SafeMarkup::checkPlain($target_oid) == 1 ?
+      '#default_value' => $target_oid ? $record->project_title : '',
+      '#description' => ($target_oid == 1) ?
         $this->t('Default project, this field can not be changed.') : 
         $this->t('Descriptive name for the project entry.'),
       '#size' => 60,
@@ -97,7 +97,7 @@ class AddUpdateForm extends FormBase {
       '#type' => 'textfield',
       '#disabled' => $target_oid == 1 ? TRUE : FALSE,
       '#title' => $this->t('Optimizely Project Code'),
-      '#default_value' => SafeMarkup::checkPlain($project_code),
+      '#default_value' => $project_code,
       '#description' => ($account_id == 0) ?
         $this->t('The Optimizely account value has not been set in the' . 
           ' <a href="@url">Account Info</a> settings form.' .
@@ -258,14 +258,13 @@ class AddUpdateForm extends FormBase {
     // Catch form submitted values and prep for processing
     $oid = $form_state->getValue('optimizely_oid');
 
-    $project_title = SafeMarkup::checkPlain($form_state->getValue('optimizely_project_title'));
-    $project_code = SafeMarkup::checkPlain($form_state->getValue('optimizely_project_code'));
+    $project_title = $form_state->getValue('optimizely_project_title');
+    $project_code = $form_state->getValue('optimizely_project_code');
 
-    // @todo - Add support for "<front>" to allow use of SafeMarkup::checkPlain() on 'optimizely_path'
     $path_array = preg_split('/[\r\n]+/', $form_state->getValue('optimizely_path'), 
                               -1, PREG_SPLIT_NO_EMPTY);
 
-    $enabled = SafeMarkup::checkPlain($form_state->getValue('optimizely_enabled'));
+    $enabled = $form_state->getValue('optimizely_enabled');
 
     // Process add or edit submission
     // No ID value included in submission - add new entry
