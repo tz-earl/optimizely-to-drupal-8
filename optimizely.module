@@ -211,11 +211,8 @@ function optimizely_page_attachments(array &$page) {
 
   if ($add_snippet) {
 
-    // Adjust path to support secure pages
-    $protocol = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on' ? 'https' : 'http';
-
     // Add javascript call to page markup
-    $snippet_url = $protocol . '://cdn.optimizely.com/js/' . $project['project_code'] . '.js';
+    $snippet_url = '//cdn.optimizely.com/js/' . $project['project_code'] . '.js';
     $page['#attached']['html_head'][] = array(
       array(
         '#tag' => 'script',
