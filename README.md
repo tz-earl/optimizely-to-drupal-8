@@ -16,3 +16,4 @@ Tested for Drupal 8.0.0-beta14. No code changes.<br />
 Updated to Drupal 8.0.0-beta15.<br />
 Updated to Drupal 8.0.0-rc1.<br />
 Fixed: Issue #2584933: Optimizely suggests no protocol in HTML snippet<br />
+Tested for Drupal 8.0.0. No code changes.<br />
