@@ -136,10 +136,6 @@ function optimizely_page_attachments(array &$page) {
 
     // Target paths from database for project and get real path for <front> if a part of target paths for project
     $project_paths = unserialize($project['path']);
-    $front_index = array_search('<front>', $project_paths);
-    if (is_int($front_index)) {
-      $project_paths[$front_index] = \Drupal::config('system.site')->get('page.front');
-    }
 
     // Check all paths for alias or sytem URL values, foreach loop based on
     // orginal array value, addiitonal values added will not effect the array
