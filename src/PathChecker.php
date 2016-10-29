@@ -17,7 +17,7 @@ class PathChecker {
 
   /**
    * validatePaths()
-   * 
+   *
    * Validate the target paths.
    *
    * @parm $target_paths
@@ -36,12 +36,12 @@ class PathChecker {
       // Check for sitewide wildcard
       if (strpos($path, '*') === 0) {
 
-        if (count($project_paths) == 1) {
-          return TRUE;
-        }
-        else {
+        // Must be just the wildcard itself with nothing trailing.
+        if ($path != '*') {
           return $path;
         }
+
+        return (count($project_paths) == 1) ? TRUE : $path;
 
       } // Path wildcards
       elseif (strpos($path, '*') !== FALSE) {
@@ -212,7 +212,7 @@ class PathChecker {
    *   $paths - a set of paths to be reviewed for alternatives
    *
    * @return
-   *   $paths - an updated list of paths that include the additional source and alias values. 
+   *   $paths - an updated list of paths that include the additional source and alias values.
    */
   private static function collectAlias($paths) {
 
@@ -253,7 +253,7 @@ class PathChecker {
    *   $paths - a set of paths to be reviewed for uniqueness
    *
    * @return
-   *   FALSE if no duplicates found otherwaise the dusplicate path is returned. 
+   *   FALSE if no duplicates found, otherwise the duplicate path is returned.
    */
   private static function duplicateCheck($paths) {
 

@@ -227,9 +227,10 @@ class AddUpdateForm extends FormBase {
       $valid_path = PathChecker::validatePaths($target_paths);
       if (!is_bool($valid_path)) {
         $form_state->setErrorByName('optimizely_path',
-          t('The project path "@project_path" is not a valid path. The path or alias' .
-            ' could not be resolved as a valid URL that will result in content on the site.',
+          t('The project path "@project_path" could not be resolved as a valid URL for the site,' .
+            ' or it contains a wildcard * that cannot be handled by this module.',
             array('@project_path' => $valid_path)));
+
       }
 
       // There must be only one Optimizely javascript call on a page.
