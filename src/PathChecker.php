@@ -20,9 +20,9 @@ class PathChecker {
    *
    * Validate the target paths.
    *
-   * @parm $target_paths
+   * @param $target_paths
    *   An array of the paths to validate.
-   * @parm $include
+   * @param $include
    *   Boolean, TRUE if the paths are included or FALSE for exclude paths
    *
    * @return
@@ -96,10 +96,10 @@ class PathChecker {
   /*
    * Compare target path against the project paths to confirm they're unique
    *
-   * @parm
+   * @param
    *   $target_paths - the paths entered for a new project entry, OR
    *   the paths of an existing project entry that has been enabled.
-   * @parm
+   * @param
    *   $target_oid = NULL : the oid of the project entry that has been enabled
    *
    * @return
@@ -208,7 +208,7 @@ class PathChecker {
   /*
    * Lookup all alternatives to the group of paths - alias, <front>
    *
-   * @parm
+   * @param
    *   $paths - a set of paths to be reviewed for alternatives
    *
    * @return
@@ -249,7 +249,7 @@ class PathChecker {
   /*
    * Compare paths within passed array to ensure each item resolves to a unique entry
    *
-   * @parm
+   * @param
    *   $paths - a set of paths to be reviewed for uniqueness
    *
    * @return
