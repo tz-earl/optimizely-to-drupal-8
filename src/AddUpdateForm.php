@@ -224,6 +224,11 @@ class AddUpdateForm extends FormBase {
 
       // Confirm that the project paths point to valid site URLs
       $target_paths = preg_split('/[\r\n]+/', $paths, -1, PREG_SPLIT_NO_EMPTY);
+
+      // For uniformity and ease of string matching, ensure each path starts with a slash /
+      // except for the site-wide wildcard * or special aliases such as <front>
+      self::checkPaths($target_paths);
+
       $valid_path = PathChecker::validatePaths($target_paths);
       if (!is_bool($valid_path)) {
         $form_state->setErrorByName('optimizely_path',
@@ -264,6 +269,10 @@ class AddUpdateForm extends FormBase {
 
     $path_array = preg_split('/[\r\n]+/', $form_state->getValue('optimizely_path'),
                               -1, PREG_SPLIT_NO_EMPTY);
+
+    // For uniformity and ease of string matching, ensure each path starts with a slash /
+    // except for the site-wide wildcard * or special aliases such as <front>
+    self::checkPaths($path_array);
 
     $enabled = $form_state->getValue('optimizely_enabled');
 
@@ -313,6 +322,29 @@ class AddUpdateForm extends FormBase {
 
     // Return to project listing page
     $form_state->setRedirect('optimizely.listing');
+  }
+
+  /**
+   * checkPaths()
+   */
+  private static function checkPaths(&$path_array) {
+    foreach ($path_array as &$path) {
+      $path = self::checkPathLeadingSlash($path);
+    }
+  }
+
+  /**
+   * checkPathLeadingSlash()
+   *
+   * @param string $path
+   *   Path to be checked for having a leading slash. If leading slash is missing, prefix one.
+   *   If the path already starts with a special char such as * or < leave it alone.
+   *
+   * @return string
+   *   The path with a leading slash added, or the original path unchanged.
+   */
+  private static function checkPathLeadingSlash($path) {
+    return (ctype_alnum($path[0])) ? '/' . $path : $path;
   }
 
 }
