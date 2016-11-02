@@ -97,7 +97,7 @@ function optimizely_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implements hook_page_build().
+ * Implements hook_page_attachments().
  *
  * Checks each page that is about to be rendered as to
  * whether to insert a snippet of Optimizely code or not.
@@ -126,6 +126,8 @@ function optimizely_page_attachments(array &$page) {
 
   // Query results found
 
+  $cache_tag = null;
+
   // Loop through each row of the found results
   while ($project = $result->fetchAssoc()) {
 
@@ -134,27 +136,24 @@ function optimizely_page_attachments(array &$page) {
       continue;
     }
 
-    // Target paths from database for project and get real path for <front> if a part of target paths for project
+    // Target paths from database for project
     $project_paths = unserialize($project['path']);
 
     // Remember to check all paths for alias or sytem URL values.
     foreach ($project_paths as $proj_path) {
 
-      // Remove parameters
+      // If the Optimizely snippet is added, use the project's path as one of the cache tags
+      // for this page. Cache invalidation is triggered via cache tags when project paths are
+      // modified or deleted. Spaces are not allowed in cache_tags, but all other characters
+      // seem to be allowed, including *. See class CacheRefresher which does the invalidating.
+      $cache_tag = 'optimizely:' . $proj_path;
+
+      // Remove parameters, if any.
       if (strpos($proj_path, '?') !== FALSE) {
-
         $proj_path = substr($proj_path, 0, strpos($proj_path, '?'));
-
-        if ( stristr($current_path, $proj_path) ||
-             stristr(_lookup_path_alias($current_path), $proj_path) ||
-             stristr(_lookup_system_path($current_path), $proj_path) ) {
-          $add_snippet = TRUE;
-          break 2;
-        }
-
       }
 
-      // Look for sitewide wild card
+      // Look for sitewide wild card.
       if ($proj_path == '*') {
         $add_snippet = TRUE;
         break 2;
@@ -214,6 +213,27 @@ function optimizely_page_attachments(array &$page) {
       ),
       'optimizely-snippet',
     );
+
+    $page['#cache']['tags'][] = $cache_tag;
+  }
+
+  // For every page, add all other cache tags that might possibly cause it to be invalidated.
+
+  $page['#cache']['tags'][] = 'optimizely:*';  // Site-wide wildcard.
+
+  // Non side-wide wildcards. Repeat for every directory level.
+  $dirname = pathinfo($current_path, PATHINFO_DIRNAME);
+  while ($dirname && $dirname != '/') {
+    $page['#cache']['tags'][] = 'optimizely:' . $dirname . '/*';
+    $dirname = pathinfo($dirname, PATHINFO_DIRNAME);
+  }
+
+  // The specific page url.
+  $page['#cache']['tags'][] = 'optimizely:' . $current_path;
+
+  // Finally, if there is an alias for the page, tag it.
+  if ($current_path_alias) {
+    $page['#cache']['tags'][] = 'optimizely:' . $current_path_alias;
   }
 }
 

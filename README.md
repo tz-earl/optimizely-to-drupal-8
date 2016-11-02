@@ -18,3 +18,6 @@ Updated to Drupal 8.0.0-rc1.<br />
 Fixed: Issue #2584933: Optimizely suggests no protocol in HTML snippet<br />
 Tested for Drupal 8.0.0. No code changes.<br />
 Tested for Drupal 8.1.0. No code changes.<br />
+Implemented cache invalidation of pages via cache tags.<br />
+Fixed: Issue 2823398: Invalid use of * should be rejected.<br />
+
