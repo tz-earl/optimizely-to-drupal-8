@@ -18,8 +18,6 @@ use Drupal\Core\Url;
  */
 class AddUpdateForm extends FormBase {
 
-  use LookupPath;
-
   /**
    * {@inheritdoc}
    */
