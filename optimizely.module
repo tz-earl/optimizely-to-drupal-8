@@ -105,7 +105,8 @@ function optimizely_theme($existing, $type, $theme, $path) {
 function optimizely_page_attachments(array &$page) {
 
   $url = \Drupal\Core\Url::fromRoute('<current>');
-  $current_path = $url->toString();
+  $current_path = $url->getInternalPath();
+  $current_path = _check_path($current_path);
 
   $current_path_alias = _lookup_path_alias($current_path);
 
@@ -221,7 +222,7 @@ function optimizely_page_attachments(array &$page) {
 
   $page['#cache']['tags'][] = 'optimizely:*';  // Site-wide wildcard.
 
-  // Non side-wide wildcards. Repeat for every directory level.
+  // Non site-wide wildcards. Repeat for every directory level.
   $dirname = pathinfo($current_path, PATHINFO_DIRNAME);
   while ($dirname && $dirname != '/') {
     $page['#cache']['tags'][] = 'optimizely:' . $dirname . '/*';
