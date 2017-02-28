@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\optimizely\LookupPath
- */
-
 namespace Drupal\optimizely;
 
 /**

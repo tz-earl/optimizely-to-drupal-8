@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\optimizely\DeleteForm
- */
-
 namespace Drupal\optimizely;
 
 use Drupal\Core\Form\ConfirmFormBase;

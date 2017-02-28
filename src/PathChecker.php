@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\optimizely\src\PathChecker
- */
-
 namespace Drupal\optimizely;
 
 

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\optimizely\src\Tests\OptimizelyDefaultSettingsTest
- */
-
 namespace Drupal\optimizely\Tests;
 
 use Drupal\simpletest\WebTestBase;

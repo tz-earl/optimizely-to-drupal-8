@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\optimizely\src\AjaxEnable
- */
-
 namespace Drupal\optimizely;
 
 use Symfony\Component\HttpFoundation\JsonResponse;

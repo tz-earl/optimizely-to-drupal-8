@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\optimizely\AccountInfoForm
- */
-
 namespace Drupal\optimizely;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\optimizely\ProjectListForm
- */
-
 namespace Drupal\optimizely;
 
 use Drupal\Core\Form\FormBase;

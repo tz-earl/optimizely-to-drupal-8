@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\optimizely\AccountId
- */
 
 namespace Drupal\optimizely;
 
