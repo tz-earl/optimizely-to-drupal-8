@@ -47,7 +47,7 @@ function optimizely_help($route_name, $arg) {
         ' while not needing to remove the actual entry. The default entry can be' .
         ' disabled when additional project entries are made with more specific' . '
          settings. This can include using the orginal Project Code.</p>',
-        array('@settings' => \Drupal::url('optimizely.settings')));
+        array('@settings' => Url::fromRoute('optimizely.settings')->toString()));
 
     case 'optimizely.listing':
       return t('<p>A listing of the Optimizely projects. Each entry can be' .
@@ -106,7 +106,7 @@ function optimizely_theme($existing, $type, $theme, $path) {
  */
 function optimizely_page_attachments(array &$page) {
 
-  $url = \Drupal\Core\Url::fromRoute('<current>');
+  $url = Url::fromRoute('<current>');
   $current_path = $url->getInternalPath();
   $current_path = _check_path($current_path);
 

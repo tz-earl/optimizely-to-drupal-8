@@ -35,7 +35,7 @@ class ProjectListForm extends FormBase {
     $form['#attached']['library'][] = 'optimizely/optimizely.enable';
 
     $prefix  = '<ul class="admin-links"><li>';
-    $prefix .= \Drupal::l(t('Add Project Entry'), new Url('optimizely.add_update'));
+    $prefix .= Link::fromTextAndUrl(t('Add Project Entry'), new Url('optimizely.add_update'))->toString();
     $prefix .= '</li></ul>';
 
     $header = array(t('Enabled'), t('Project Title'), t('Update / Delete'),
@@ -103,7 +103,7 @@ class ProjectListForm extends FormBase {
             '#template' => '<a href="{{ update_url }}">{{ update }}</a> / Default Entry',
             '#context' => array('update' => t('Update'),
                                 'update_url' =>
-                                   \Drupal::url('optimizely.add_update.oid', array('oid' => $row->oid)),
+                                   Url::fromRoute('optimizely.add_update.oid', array('oid' => $row->oid))->toString(),
                             ),
           );
       }
@@ -115,9 +115,9 @@ class ProjectListForm extends FormBase {
             '#context' => array('update' => t('Update'),
                                 'delete' => t('Delete'),
                                 'update_url' =>
-                                   \Drupal::url('optimizely.add_update.oid', array('oid' => $row->oid)),
+                                   Url::fromRoute('optimizely.add_update.oid', array('oid' => $row->oid))->toString(),
                                 'delete_url' =>
-                                   \Drupal::url('optimizely.delete.oid', array('oid' => $row->oid)),
+                                   Url::fromRoute('optimizely.delete.oid', array('oid' => $row->oid))->toString(),
                             ),
           );
       }
@@ -139,7 +139,7 @@ class ProjectListForm extends FormBase {
         // markup to be treated correctly as markup, not literal content.
         $project_code = t('Set Optimizely ID in <strong><a href="@url">@acct_info</a>' .
               '</strong> page to enable default project sitewide.',
-              array('@url' => \Drupal::url('optimizely.settings'),
+              array('@url' => Url::fromRoute('optimizely.settings')->toString(),
                     '@acct_info' => t('Account Info'),
                 )
             );

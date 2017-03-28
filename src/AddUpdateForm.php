@@ -96,7 +96,7 @@ class AddUpdateForm extends FormBase {
           ' <a href="@url">Account Info</a> settings form.' .
           ' The Optimizely account value is used as' .
           ' the project ID for this "default" project entry.',
-          array('@url' => \Drupal::url('optimizely.settings'))
+          array('@url' => Url::fromRoute('optimizely.settings')->toString())
           ) :
         $this->t('The Optimizely javascript file name used in the snippet' .
           ' as provided by the Optimizely website for the project.'),
@@ -141,7 +141,7 @@ class AddUpdateForm extends FormBase {
     );
 
     $addupdate_form['cancel'] = array(
-      '#markup' => \Drupal::l(t('Cancel'), new Url('optimizely.settings')),
+      '#markup' => Link::fromTextAndUrl(t('Cancel'), new Url('optimizely.settings'))->toString(),
       '#weight' => 101,
     );
 
@@ -166,7 +166,7 @@ class AddUpdateForm extends FormBase {
         $this->t('The Optimizely Account ID must be set in the' .
                   ' <a href="@url">Account Info</a> page.' .
                   ' The account ID is used as the default Optimizely Project Code.',
-                  array('@url' => \Drupal::url('optimizely.settings'))
+                  array('@url' => Url::fromRoute('optimizely.settings')->toString())
                 )
         );
     } // Validate that the project code entered is a number
