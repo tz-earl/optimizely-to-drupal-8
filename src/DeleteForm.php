@@ -53,25 +53,25 @@ class DeleteForm extends ConfirmFormBase {
     }
 
     // Lookup entry details before delete
-    $query = db_select('optimizely', 'o', array('target' => 'slave'))
+    $query = \Drupal::database()->select('optimizely', 'o', array('target' => 'slave'))
       ->fields('o', array('path', 'enabled'))
       ->condition('o.oid', $this->oid, '=');
 
     $record = $query->execute()
       ->fetchObject();
-    
+
     // Delete entry in database based on the target $oid
-    $query = db_delete('optimizely')
+    $query = \Drupal::database()->delete('optimizely')
       ->condition('oid', $this->oid);
     $query->execute();
 
     // Only clear page cache for entries that are active when deleted
     if ($record->enabled) {
-      
-      // Always serialized when saved 
+
+      // Always serialized when saved
       $path_array = unserialize($record->path);
       CacheRefresher::doRefresh($path_array);
-      
+
     }
 
     drupal_set_message(t('The project entry has been deleted.'), 'status');

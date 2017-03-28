@@ -60,17 +60,17 @@ class OptimizelyAddUpdateTest extends WebTestBase {
 
   }
 
-  
+
   public function testAddUpdateProject() {
 
     $this->drupalLogin($this->privilegedUser);
 
     // N.B. Do NOT use randomString() to generate string values because the
     // resulting strings may contain special chars that break the SQL
-    // statements as well as possibly causing other problems. 
+    // statements as well as possibly causing other problems.
     // Use randomMachineName() instead since it generates letters and numbers only.
 
-    //----- create page  
+    //----- create page
     $settings = array(
       'type' => 'page',
       'title' => $this->randomMachineName(32),
@@ -98,15 +98,15 @@ class OptimizelyAddUpdateTest extends WebTestBase {
     );
     $this->drupalPostForm($this->addUpdatePage, $edit, t('Add'));
 
-    $project_title = db_query(
+    $project_title = \Drupal::database()->query(
       'SELECT project_title FROM {optimizely} WHERE project_title = :optimizely_project_title',
        array(':optimizely_project_title' => $edit['optimizely_project_title']))
         ->fetchField();
 
-    $this->assertEqual($project_title, $edit['optimizely_project_title'], 
+    $this->assertEqual($project_title, $edit['optimizely_project_title'],
                         t('<strong>The project was added to the database.</strong>'), 'Optimizely');
 
-    //----- create page  
+    //----- create page
     $settings_2 = array(
       'type' => 'page',
       'title' => $this->randomMachineName(32),
@@ -135,12 +135,12 @@ class OptimizelyAddUpdateTest extends WebTestBase {
     $this->drupalPostForm($this->update2Page, $edit_2, t('Update'));
 
     // test if database was updated
-    $project_title = db_query(
+    $project_title = \Drupal::database()->query(
       'SELECT project_title FROM {optimizely} WHERE project_title = :optimizely_project_title',
        array(':optimizely_project_title' => $edit_2['optimizely_project_title']))
         ->fetchField();
 
-    $this->assertEqual($project_title, $edit_2['optimizely_project_title'], 
+    $this->assertEqual($project_title, $edit_2['optimizely_project_title'],
                         t('<strong>The project was updated in the database.</strong>'), 'Optimizely');
   }
 

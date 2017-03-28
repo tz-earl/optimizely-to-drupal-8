@@ -27,8 +27,8 @@ class AccountSettingsForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Optimizely ID Number'),
       '#default_value' => AccountId::getId(),
-      '#description' => 
-        $this->t('Your Optimizely account ID. This is the number after "/js/" in the' . 
+      '#description' =>
+        $this->t('Your Optimizely account ID. This is the number after "/js/" in the' .
           ' Optimizely Tracking Code found in your account on the Optimizely website.'),
       '#size' => 60,
       '#maxlength' => 256,
@@ -64,7 +64,7 @@ class AccountSettingsForm extends FormBase {
     AccountId::setId($optimizely_id);
 
     // Update the default project / experiment entry with the account ID value
-    db_update('optimizely')
+    \Drupal::database()->update('optimizely')
       ->fields(array(
           'project_code' => $optimizely_id,
         ))
@@ -73,7 +73,7 @@ class AccountSettingsForm extends FormBase {
 
     // Inform the administrator that the default project / experiment entry
     // is ready to be enabled.
-    drupal_set_message(t('The default project entry is now ready to be enabled.' . 
+    drupal_set_message(t('The default project entry is now ready to be enabled.' .
       ' This will apply the default Optimizely project tests sitewide.'), 'status');
 
     // Redirect back to projects listing.

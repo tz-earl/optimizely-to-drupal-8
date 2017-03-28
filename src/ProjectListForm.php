@@ -4,6 +4,7 @@ namespace Drupal\optimizely;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 
@@ -26,20 +27,20 @@ class ProjectListForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-  
+
     $form = array();
-    
+
     // Load css and js files specific to optimizely admin pages
     $form['#attached']['library'][] = 'optimizely/optimizely.forms';
     $form['#attached']['library'][] = 'optimizely/optimizely.enable';
-    
+
     $prefix  = '<ul class="admin-links"><li>';
     $prefix .= \Drupal::l(t('Add Project Entry'), new Url('optimizely.add_update'));
     $prefix .= '</li></ul>';
 
-    $header = array(t('Enabled'), t('Project Title'), t('Update / Delete'), 
+    $header = array(t('Enabled'), t('Project Title'), t('Update / Delete'),
                     t('Paths'), t('Project Code'));
-    
+
     $form['projects'] = array(
       '#prefix' => $prefix . '<div id="optimizely-project-listing">',
       '#suffix' => '</div>',
@@ -52,19 +53,19 @@ class ProjectListForm extends FormBase {
 
     // Lookup account ID setting to trigger "nag message".
     $account_id =  AccountId::getId();
-    
+
     // Begin building the query.
-    $query = db_select('optimizely', 'o', array('target' => 'slave'))
+    $query = \Drupal::database()->select('optimizely', 'o', array('target' => 'slave'))
       ->orderBy('oid')
       ->fields('o');
     $result = $query->execute();
 
     // Build each row of the table
     foreach ($result as $project_count => $row) {
-      
+
       // Listing of target paths for the project entry
       $paths = unserialize($row->path);
-      
+
       // Modify the front page path, if present.
       $front_idx = array_search('<front>', $paths);
       if ($front_idx !== FALSE) {
@@ -89,7 +90,7 @@ class ProjectListForm extends FormBase {
         '#extra_data' => array('field_name' => 'project_enabled'),
         '#suffix' => '<div class="status-container status-' . $row->oid . '"></div>'
       );
-      
+
       if ($row->enabled) {
         $form['projects'][$project_count]['enable']['#attributes']['checked'] = 'checked';
       }
@@ -132,7 +133,7 @@ class ProjectListForm extends FormBase {
       $form['projects'][$project_count]['#project_title'] = $row->project_title;
       $form['projects'][$project_count]['#admin_links'] = $render_links;
       $form['projects'][$project_count]['#paths'] = $render_paths;
-      
+
       if ($account_id == 0 && $row->oid == 1) {
         // Calling the t() function will cause the embedded html
         // markup to be treated correctly as markup, not literal content.
@@ -162,10 +163,10 @@ class ProjectListForm extends FormBase {
    * Build render array for one row of the table of projects.
    */
   private function _optimizely_project_row($proj) {
-        
+
     $enabled = (array_key_exists('checked', $proj['enable']['#attributes'])) ?
                 TRUE : FALSE;
-      
+
     $render = array(
       'class' => array(
         'project-row-' . $proj['#project_code']
@@ -197,8 +198,8 @@ class ProjectListForm extends FormBase {
         ),
       ),
     );
-    
-    return $render;   
+
+    return $render;
   }
 
   /**

@@ -95,7 +95,7 @@ class OptimizelyEnableDisableTest extends WebTestBase {
     $this->drupalPostForm($this->update2Page, $edit_2, t('Update'));
 
     // test if project was enabled
-    $enabled = db_query('SELECT enabled FROM {optimizely} WHERE oid = 2')->fetchField();
+    $enabled = \Drupal::database()->query('SELECT enabled FROM {optimizely} WHERE oid = 2')->fetchField();
     $this->assertEqual($enabled, $edit_2['optimizely_enabled'],
                         t('<strong>The project was enabled from update page.</strong>'), 'Optimizely');
 
@@ -105,7 +105,7 @@ class OptimizelyEnableDisableTest extends WebTestBase {
     $this->drupalPostForm($this->update2Page, $edit_3, t('Update'));
 
     // test if project was disabled
-    $enabled = db_query('SELECT enabled FROM {optimizely} WHERE oid = 2')->fetchField();
+    $enabled = \Drupal::database()->query('SELECT enabled FROM {optimizely} WHERE oid = 2')->fetchField();
     $this->assertEqual($enabled, $edit_3['optimizely_enabled'],
                         t('<strong>The project was disabled from update page.</strong>'),'Optimizely');
 

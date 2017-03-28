@@ -45,7 +45,7 @@ class PathChecker {
         if (\Drupal::pathValidator()->isValid($project_wildpath) == FALSE) {
 
           // Look for entries in url_alias
-          $query = db_query("SELECT * FROM {url_alias} WHERE
+          $query = \Drupal::database()->query("SELECT * FROM {url_alias} WHERE
             source LIKE :project_wildpath OR alias LIKE :project_wildpath",
             array(':project_wildpath' => $project_wildpath . '%'));
           $results = $query->fetchCol(0);
@@ -113,7 +113,7 @@ class PathChecker {
     if (!$duplicate_target_path) {
 
       // Collect all of the existing project paths that are enabled,
-      $query = db_select('optimizely', 'o', array('target' => 'slave'))
+      $query = \Drupal::database()->select('optimizely', 'o', array('target' => 'slave'))
         ->fields('o', array('oid', 'project_title', 'path'))
         ->condition('o.enabled', 1, '=');
 

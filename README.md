@@ -25,3 +25,4 @@ Fixed: Issue 2823398: Invalid use of * should be rejected.<br />
 Fixed: Issue 2825379: Update hook optimizely_update_8000() not necessary
 Fixed: Issue 2826169: Problem to create Cache Tags breaking Drupal
 Fixed: Issue 2847940: by nehakhadke: Remove @file tag docblock from all the .php files
+Fixed: Issue 2856506: by Znak: Deprecated methods and functions

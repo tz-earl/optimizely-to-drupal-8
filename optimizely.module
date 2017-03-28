@@ -23,6 +23,8 @@
  * 8.x-dev by Earl Fong (tz_earl: https://www.drupal.org/user/2531114/)
  */
 
+use Drupal\Core\Url;
+
 /**
  * Implements hook_help().
  *
@@ -113,7 +115,7 @@ function optimizely_page_attachments(array &$page) {
   $add_snippet = FALSE;
 
   // Load all entries in the optimizely table
-  $query = db_select('optimizely', 'o', array('target' => 'slave'))
+  $query = \Drupal::database()->select('optimizely', 'o', array('target' => 'slave'))
     ->fields('o')
     ->condition('o.enabled', 1, '=')
     ->orderBy('oid');

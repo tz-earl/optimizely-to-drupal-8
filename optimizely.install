@@ -95,7 +95,7 @@ function optimizely_install() {
   drupal_set_message(t('Optimizely database table has been created.'), 'status');
 
   // Add default entry - check to see if entry already exsists
-  $default_entry_exists = (bool) db_query("
+  $default_entry_exists = (bool) \Drupal::database()->query("
 	  SELECT
 		  project_title
 		FROM
@@ -113,7 +113,7 @@ function optimizely_install() {
 
     // Create default entry
 
-    $default_entry_created = (bool) db_insert('optimizely')
+    $default_entry_created = (bool) \Drupal::database()->insert('optimizely')
       ->fields(
         array(
           'project_title' => 'Default',

@@ -3,9 +3,9 @@
 namespace Drupal\optimizely;
 
 use Drupal\Core\Form\FormBase;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Link;
 
 
 /**
@@ -48,7 +48,7 @@ class AddUpdateForm extends FormBase {
 
       $form_action = 'Update';
 
-      $query = db_select('optimizely', 'o', array('target' => 'slave'))
+      $query = \Drupal::database()->select('optimizely', 'o', array('target' => 'slave'))
         ->fields('o')
         ->condition('o.oid', $target_oid, '=');
 
@@ -180,7 +180,7 @@ class AddUpdateForm extends FormBase {
       // Confirm project_code is unique or the entered project code is also the account ID.
       // SELECT the project title in prep for related form error message.
 
-      $query = db_query('SELECT project_title FROM {optimizely}
+      $query = \Drupal::database()->query('SELECT project_title FROM {optimizely}
         WHERE project_code = :project_code ORDER BY oid DESC',
         array(':project_code' => $proj_code));
 
@@ -273,7 +273,7 @@ class AddUpdateForm extends FormBase {
     // No ID value included in submission - add new entry
     if (!isset($oid))  {
 
-      db_insert('optimizely')
+      \Drupal::database()->insert('optimizely')
         ->fields(array(
           'project_title' => $project_title,
           'path' => serialize($path_array),
@@ -292,7 +292,7 @@ class AddUpdateForm extends FormBase {
     } // $oid is set, update existing entry
     else {
 
-      db_update('optimizely')
+      \Drupal::database()->update('optimizely')
         ->fields(array(
           'project_title' => $project_title,
           'path' => serialize($path_array),
