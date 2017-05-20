@@ -26,3 +26,4 @@ Fixed: Issue 2825379: Update hook optimizely_update_8000() not necessary<br />
 Fixed: Issue 2826169: Problem to create Cache Tags breaking Drupal<br />
 Fixed: Issue 2847940: by nehakhadke: Remove @file tag docblock from all the .php files<br />
 Fixed: Issue 2856506: by Znak: Deprecated methods and functions<br />
+Fixed: Clean up code to Drupal coding standards<br />
