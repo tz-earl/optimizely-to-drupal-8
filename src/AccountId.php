@@ -2,18 +2,27 @@
 
 namespace Drupal\optimizely;
 
+/**
+ * For handling the Optimizely account id number.
+ */
 class AccountId {
 
   private static $config = NULL;
 
+  /**
+   * Retrieve the config object for storing the settings.
+   */
   private static function getConfig() {
 
-    if (! self::$config) {
+    if (!self::$config) {
       self::$config = \Drupal::configFactory()->getEditable('optimizely.settings');
     }
     return self::$config;
   }
 
+  /**
+   * Retrieve the account id.
+   */
   public static function getId() {
 
     $config = self::getConfig();
@@ -21,6 +30,9 @@ class AccountId {
     return $optimizely_id;
   }
 
+  /**
+   * Store the account id.
+   */
   public static function setId($id) {
 
     $config = self::getConfig();
@@ -29,12 +41,16 @@ class AccountId {
     return TRUE;
   }
 
+  /**
+   * Delete the account id.
+   *
+   * Currently, only the account id is stored in the settings,
+   * so we just delete everything stored in "optimizely.settings".
+   */
   public static function deleteId() {
-    // N.B. This deletes any and all settings
-    // stored in "optimizely.settings". 
-
     $config = self::getConfig();
     $config->delete();
     return TRUE;
   }
+
 }
