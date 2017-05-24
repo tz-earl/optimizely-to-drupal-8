@@ -35,9 +35,7 @@ class OptimizelyAliasIncludeSnippetTest extends WebTestBase {
   public static function getInfo() {
     return [
       'name' => 'Optimizely Alias Include Snippet',
-      'description' =>
-        'Ensure that the Optimizely snippet is included
-         in project path when using aliases.',
+      'description' => 'Ensure that the Optimizely snippet is included in project path when using aliases.',
       'group' => 'Optimizely',
     ];
 

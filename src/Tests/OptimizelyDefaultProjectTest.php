@@ -138,8 +138,8 @@ class OptimizelyDefaultProjectTest extends WebTestBase {
                           '<strong>Default project path set to sitewide wild card "*".</strong>',
                           'Optimizely');
 
-    // * 5. The default project can not be enabled until the account number
-    //      is entered on the settings page.
+    // * 5. The default project can not be enabled
+    // until the account number is entered on the settings page.
   }
 
   /**
