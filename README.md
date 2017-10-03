@@ -29,3 +29,4 @@ Fixed: Issue 2856506: by Znak: Deprecated methods and functions<br />
 Fixed: Clean up code to Drupal coding standards<br />
 
 Tested for Drupal 8.3.3 and PHP 7.1. No code changes needed.<br />
+Fixed: Issue 2913679: Error message for duplicate project code does not replace variables<br />

@@ -174,8 +174,8 @@ class AddUpdateForm extends FormBase {
     // Validate that the project code entered is a number.
     elseif (!ctype_digit($proj_code)) {
       $form_state->setErrorByName('optimizely_project_code',
-        $this->t('The project code !code must only contain digits.',
-          ['!code' => $proj_code]));
+        $this->t("The project code %code must only contain digits.",
+          ['%code' => $proj_code]));
     }
     elseif ($op == 'Add') {
 
@@ -201,11 +201,11 @@ class AddUpdateForm extends FormBase {
 
         // Flag the project code form field.
         $form_state->setErrorByName('optimizely_project_code',
-          $this->t('The project code (!project_code) already has an entry
-                     in the "!found_entry_title" project.',
+          $this->t('The project code (%project_code) already has an entry
+                     in the "%found_entry_title" project.',
                     [
-                      '!project_code' => $proj_code,
-                      '!found_entry_title' => $found_entry_title,
+                      '%project_code' => $proj_code,
+                      '%found_entry_title' => $found_entry_title,
                     ]));
       }
 
@@ -229,9 +229,9 @@ class AddUpdateForm extends FormBase {
       $valid_path = PathChecker::validatePaths($target_paths);
       if (!is_bool($valid_path)) {
         $form_state->setErrorByName('optimizely_path',
-          t('The project path "@project_path" could not be resolved as a valid URL for the site,
+          t('The project path "%project_path" could not be resolved as a valid URL for the site,
              or it contains a wildcard * that cannot be handled by this module.',
-            ['@project_path' => $valid_path]));
+            ['%project_path' => $valid_path]));
 
       }
 
@@ -242,10 +242,10 @@ class AddUpdateForm extends FormBase {
 
       if (!is_bool($error_title)) {
         $form_state->setErrorByName('optimizely_path',
-          t('The path "@error_path" will result in a duplicate entry based on
+          t('The path "%error_path" will result in a duplicate entry based on
              the other project path settings. Optimizely does not allow more
              than one project to be run on a page.',
-            ['@error_path' => $error_path]));
+            ['%error_path' => $error_path]));
       }
     }
   }
