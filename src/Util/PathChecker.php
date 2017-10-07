@@ -1,13 +1,15 @@
 <?php
 
-namespace Drupal\optimizely;
+namespace Drupal\optimizely\Util;
+
+use Drupal\optimizely\Util\LookupPath;
 
 /**
  * Provides static methods to check path validity, etc.
  */
 class PathChecker {
 
-  use LookupPath;
+use LookupPath;
 
   /**
    * Validate the target paths.

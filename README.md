@@ -30,3 +30,6 @@ Fixed: Clean up code to Drupal coding standards<br />
 
 Tested for Drupal 8.3.3 and PHP 7.1. No code changes needed.<br />
 Fixed: Issue 2913679: Error message for duplicate project code does not replace variables<br />
+
+Fixed: Issue 2821560: Use subdirectories for source code files
+Started 8.x-3.x branch from 8.x-1.x branch.

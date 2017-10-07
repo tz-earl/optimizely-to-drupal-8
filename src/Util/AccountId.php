@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\optimizely;
+namespace Drupal\optimizely\Util;
 
 /**
  * For handling the Optimizely account id number.

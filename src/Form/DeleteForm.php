@@ -1,10 +1,12 @@
 <?php
 
-namespace Drupal\optimizely;
+namespace Drupal\optimizely\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+
+use Drupal\optimizely\Util\CacheRefresher;
 
 /**
  * Implements the confirmation form for deleting a project.

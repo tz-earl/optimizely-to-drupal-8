@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\optimizely;
+namespace Drupal\optimizely\Util;
 
 /**
  * Refresh the cache as needed.

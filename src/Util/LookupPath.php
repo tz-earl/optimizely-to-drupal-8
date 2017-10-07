@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\optimizely;
+namespace Drupal\optimizely\Util;
 
 /**
  * Implements methods for looking up path aliases and system paths.

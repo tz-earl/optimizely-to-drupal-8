@@ -1,8 +1,11 @@
 <?php
 
-namespace Drupal\optimizely;
+namespace Drupal\optimizely\Controller;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+
+use Drupal\optimizely\Util\PathChecker;
+use Drupal\optimizely\Util\CacheRefresher;
 
 /**
  * Respond to ajax requests when Enable/Disable checkbox is clicked.
