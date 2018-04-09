@@ -233,7 +233,7 @@ function optimizely_page_attachments(array &$page) {
 
   // Non site-wide wildcards. Repeat for every directory level.
   $dirname = pathinfo($current_path, PATHINFO_DIRNAME);
-  while ($dirname && $dirname != '/') {
+  while ($dirname && $dirname != '/' && $dirname != '\\') {
     $page['#cache']['tags'][] = 'optimizely:' . $dirname . '/*';
     $dirname = pathinfo($dirname, PATHINFO_DIRNAME);
   }
