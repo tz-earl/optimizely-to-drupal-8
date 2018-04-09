@@ -33,3 +33,5 @@ Fixed: Issue 2913679: Error message for duplicate project code does not replace 
 
 Fixed: Issue 2821560: Use subdirectories for source code files
 Started 8.x-3.x branch from 8.x-1.x branch.
+
+Fixed: Issue #2958572 by Watergate: Out of memory exception on Windows
